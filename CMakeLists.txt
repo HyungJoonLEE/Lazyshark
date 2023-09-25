@@ -36,7 +36,7 @@ file(GLOB_RECURSE SOURCES
 )
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(QT${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+#find_package(QT${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt6Core REQUIRED)
 find_package(Qt6Widgets REQUIRED)
 

@@ -1,10 +1,8 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.5)
 
-if (WIN32)
-    project(LAZYSHARK LANGUAGES CXX)
-elseif(UNIX)
-    project(LAZYSHARK)
-endif()
+project(LAZYSHARK
+        VERSION 1.0
+        LANGUAGES CXX)
 
 set(CMAKE_CONFIGURATION_TYPES "Release;RelWithDebInfo" CACHE STRING "" FORCE)
 
@@ -13,13 +11,18 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_PREFIX_PATH $ENV{QTDIR})
-find_package(Qt6Core REQUIRED)
-find_package(Qt6Widgets REQUIRED)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+
 
 #======================== INCLUSION OF PROJECT FILES ========================#
 set(FORMS_DIR "${CMAKE_SOURCE_DIR}/forms")
 set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+# Add the forms directory to the AUTOUIC search paths
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
 
 include_directories(${FORMS_DIR})
 include_directories(${INCLUDE_DIR})
@@ -32,20 +35,22 @@ file(GLOB_RECURSE SOURCES
         "${SOURCE_DIR}/*.cpp"
 )
 
-#======================== SETUP EXECUTABLE ========================#
-# Enable debug logging on RELWITHDEBINFO configuration
-#set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS
-#        $<$CONFIG:RELWITHDEBINFO>:QT_MESSAGELOGCONTEXT>
-#)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(QT${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt6Core REQUIRED)
+find_package(Qt6Widgets REQUIRED)
 
-# Add the forms directory to the AUTOUIC search paths
-set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
 
-# Add the executables
-if (WIN32)
-    add_executable(LAZYSHARK WIN32 ${SOURCES})
-elseif(UNIX)
-    add_executable(LAZYSHARK ${SOURCES})
+
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_executable(LAZYSHARK
+        MANUAL_FINALIZATION
+        ${SOURCES}
+    )
+else()
+    add_executable(LAZYSHARK
+            ${SOURCES}
+    )
 endif()
 
 # Add the target includes for LAZYSHARK
@@ -53,5 +58,19 @@ target_include_directories(LAZYSHARK PRIVATE ${FORMS_DIR})
 target_include_directories(LAZYSHARK PRIVATE ${INCLUDE_DIR})
 target_include_directories(LAZYSHARK PRIVATE ${SOURCE_DIR})
 
-#======================== LINKING LIBRARIES ========================#
-target_link_libraries(LAZYSHARK Qt6::Widgets)
+
+include(GNUInstallDirs)
+install(TARGETS LAZYSHARK
+        BUNDLE DESTINATION .
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+if(QT_VERSION_MAJOR EQUAL 6)
+    qt_finalize_executable(LAZYSHARK)
+endif()
+
+# Add the forms directory to the AUTOUIC search paths
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
+target_link_libraries(LAZYSHARK PRIVATE Qt6::Widgets)
+target_link_libraries(LAZYSHARK PRIVATE Qt6::Core)

@@ -13,3 +13,18 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+
+void MainWindow::on_SubmitBtn_clicked()
+{
+    hide();
+    QMessageBox::about(this, "SUBMIT", "SUBMIT SHIT");
+}
+
+
+void MainWindow::on_RunBtn_clicked()
+{
+    hide();
+    QMessageBox::about(this, "RUN", "RUN ANUSHK");
+}
+

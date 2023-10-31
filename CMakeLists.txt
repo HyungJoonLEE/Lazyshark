@@ -14,6 +14,13 @@ set(CMAKE_PREFIX_PATH $ENV{QTDIR})
 set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#if(APPLE)
+#else()
+#    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
+#    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+#    string(APPEND CMAKE_CXX_FLAGS_RELEASE " -arch x86_64 -O3")
+#    string(APPEND CMAKE_CC_FLAGS_RELEASE " -arch x86_64 -O3")
+#endif()
 
 
 
@@ -23,6 +30,7 @@ set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 # Add the forms directory to the AUTOUIC search paths
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
+#list(list(APPEND CMAKE_PREFIX_PATH "/home/rip/Qt/5.12.1/gcc_64"))
 
 include_directories(${FORMS_DIR})
 include_directories(${INCLUDE_DIR})

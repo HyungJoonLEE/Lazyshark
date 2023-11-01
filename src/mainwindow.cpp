@@ -49,17 +49,3 @@ void MainWindow::on_submitBtn_clicked()
     QMessageBox::about(this, "SUBMIT", "SUBMIT SHIT");
 }
 
-
-bool MainWindow::loadFile(const QString &fileName) {
-    QImageReader reader(fileName);
-    reader.setAutoTransform(true);
-    const QImage newImage = reader.read();
-    if (newImage.isNull()) {
-        QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
-                                 tr("Cannot load %1: %2")
-                                     .arg(QDir::toNativeSeparators(fileName), reader.errorString()));
-        return false;
-    }
-}
-
-

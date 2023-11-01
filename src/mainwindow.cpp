@@ -9,16 +9,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 //    ui->mainPic->setPixmap(QPixmap("/Users/Klaiden/Desktop/Lazyshark/images/cloud3.png"));
 
-    QImage image("/Users/Klaiden/Desktop/Lazyshark/images/cloud.png");
+    QImage image("./../images/cloud2.png");
     QPainter p(&image);
     p.setPen(QPen(Qt::white));
     p.setFont(QFont("Arial", 20, QFont::Bold));
-    p.drawText(QRect(75,0,width(),height()), Qt::AlignCenter, "Drag File Here");
+    p.drawText(QRect(0,-10,width(),height()), Qt::AlignCenter, "Drag File Here");
     ui->mainPic->setPixmap(QPixmap::fromImage(image));
 
-    QIcon ButtonIcon(QPixmap("/Users/Klaiden/Desktop/Lazyshark/images/wireshark.png"));
+    QIcon ButtonIcon(QPixmap("./../images/cute.png"));
     ui->scanBtn->setIcon(ButtonIcon);
-    ui->scanBtn->setIconSize(QSize(25, 25));
+    ui->scanBtn->setIconSize(QSize(30, 30));
     setAcceptDrops(true);
 
 }

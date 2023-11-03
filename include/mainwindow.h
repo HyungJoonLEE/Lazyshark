@@ -16,7 +16,6 @@
 #include <QPainter>
 
 
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -30,7 +29,7 @@ public:
     ~MainWindow();
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
-    bool loadFile(const QString &fileName);
+    QVector<QString> getPcapVector();
 
 
 private slots:
@@ -38,5 +37,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QVector<QString> pcapVector;
 };
 #endif // MAINWINDOW_H

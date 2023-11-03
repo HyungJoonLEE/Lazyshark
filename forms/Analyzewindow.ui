@@ -1,6 +1,6 @@
 <ui version="4.0">
- <class>analysis</class>
- <widget name="analysis" class="QDialog">
+ <class>AnalyzeWindow</class>
+ <widget class="QDialog" name="AnalyzeWindow">
   <property name="geometry">
    <rect>
     <x>0</x>

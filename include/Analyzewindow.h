@@ -14,6 +14,7 @@
 #include <QButtonGroup>
 #include <QPen>
 #include <QPainter>
+#include <QVector>
 
 namespace Ui {
 class AnalyzeWindow;
@@ -26,10 +27,10 @@ class AnalyzeWindow : public QDialog
 public:
     explicit AnalyzeWindow(QWidget *parent = nullptr);
     ~AnalyzeWindow();
-    void runProgram();
-
+    void setVector(const QVector<QString>& vec);
 private:
     Ui::AnalyzeWindow *ui;
+    QVector<QString> pcapFiles;
 };
 
 #endif // ANALYZEWINDOW_H

@@ -29,7 +29,7 @@ public:
     ~MainWindow();
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
-    QVector<QString> getPcapVector();
+    QVector<QString>& getPcapVector();
 
 
 private slots:

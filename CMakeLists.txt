@@ -25,7 +25,6 @@ list(APPEND CMAKE_PREFIX_PATH "/opt/Qt/6.5.2/gcc_64")
 #endif()
 
 
-
 #======================== INCLUSION OF PROJECT FILES ========================#
 set(FORMS_DIR "${CMAKE_SOURCE_DIR}/forms")
 set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
@@ -57,6 +56,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${SOURCES}
     )
 else()
+    include (GNUInstallDirs)
+    include(FindPCAP.cmake)
     add_executable(LAZYSHARK
             ${SOURCES}
     )
@@ -83,4 +84,5 @@ endif()
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
 target_link_libraries(LAZYSHARK PRIVATE Qt6::Widgets)
 target_link_libraries(LAZYSHARK PRIVATE Qt6::Core)
+target_link_libraries(LAZYSHARK PRIVATE ${PCAP_LIBRARY})
 

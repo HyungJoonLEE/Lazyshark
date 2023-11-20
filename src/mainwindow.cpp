@@ -51,14 +51,18 @@ void MainWindow::dropEvent(QDropEvent *e) {
 
 
 void MainWindow::on_submitBtn_clicked() {
-    if (pcapVector.empty()) {
+    unsigned int fileCount = pcapVector.size();
+    if (!fileCount) {
         QMessageBox::about(this, "WARNING", "No file detected");
     }
     else {
-        AnalyzeWindow analyzeWindow;
-        analyzeWindow.setModal(true);
-        analyzeWindow.setVector(getPcapVector());
-        analyzeWindow.exec();
+        AnalyzeWindow analyzeWindow[fileCount];
+        for (int i = 0; i < fileCount; i++) {
+            std::string pcapFile = pcapVector.at(i).toUtf8().constData();
+            analyzeWindow[i].setModal(true);
+            analyzeWindow[i].readPcapFile(pcapFile);
+            analyzeWindow[i].exec();
+        }
     }
 }
 

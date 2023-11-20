@@ -6,6 +6,7 @@
 #include <QMimeData>
 #include <QDir>
 #include <QVector>
+#include <QString>
 
 namespace Ui {
 class AnalyzeWindow;
@@ -19,6 +20,7 @@ public:
     explicit AnalyzeWindow(QWidget *parent = nullptr);
     ~AnalyzeWindow();
     void setVector(const QVector<QString>& vec);
+    void readPcapFile(std::string& pcapFile);
 private:
     Ui::AnalyzeWindow *ui;
     QVector<QString> pcapFiles;

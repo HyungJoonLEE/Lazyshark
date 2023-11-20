@@ -1,5 +1,6 @@
 #include "Analyzewindow.h"
 #include "ui_Analyzewindow.h"
+#include "PcapReader.h"
 
 
 AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
@@ -22,7 +23,12 @@ void AnalyzeWindow::setVector(const QVector<QString>& pcapVector) {
 }
 
 
-
+void AnalyzeWindow::readPcapFile(std::string& pcapFile) {
+    PcapReader reader(pcapFile);
+    if (reader.open()) {
+        reader.pcapRead();
+    }
+}
 
 
 

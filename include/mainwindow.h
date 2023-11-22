@@ -14,6 +14,8 @@
 #include <QButtonGroup>
 #include <QPen>
 #include <QPainter>
+#include <cstdlib>
+
 
 
 QT_BEGIN_NAMESPACE
@@ -29,8 +31,8 @@ public:
     ~MainWindow();
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
-    QVector<QString>& getPcapVector();
-
+    void readPcapFile(std::string& pcapFile);
+    void generateSnortLog(std::string &pcapFile);
 
 private slots:
     void on_submitBtn_clicked();

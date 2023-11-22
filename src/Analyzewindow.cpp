@@ -15,20 +15,3 @@ AnalyzeWindow::~AnalyzeWindow() {
     delete ui;
 }
 
-
-void AnalyzeWindow::setVector(const QVector<QString>& pcapVector) {
-    for (const QString& fileName : pcapVector) {
-        pcapFiles.push_back(fileName);
-    }
-}
-
-
-void AnalyzeWindow::readPcapFile(std::string& pcapFile) {
-    PcapReader reader(pcapFile);
-    if (reader.open()) {
-        reader.pcapRead();
-    }
-}
-
-
-

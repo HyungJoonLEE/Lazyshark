@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "Analyzewindow.h"
+#include "PcapReader.h"
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -59,15 +61,31 @@ void MainWindow::on_submitBtn_clicked() {
         AnalyzeWindow analyzeWindow[fileCount];
         for (int i = 0; i < fileCount; i++) {
             std::string pcapFile = pcapVector.at(i).toUtf8().constData();
+            generateSnortLog(pcapFile);
+            readPcapFile(pcapFile);
             analyzeWindow[i].setModal(true);
-            analyzeWindow[i].readPcapFile(pcapFile);
             analyzeWindow[i].exec();
         }
     }
 }
 
 
-QVector<QString> &MainWindow::getPcapVector() {
-    return pcapVector;
+void MainWindow::generateSnortLog(std::string &pcapFile) {
+    std::string cmd = "snort -c ./../snort/etc/snort.conf -r '"
+                      + pcapFile
+                      + "' -l ./../logs";
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "r"), pclose);
+    if (!pipe) {
+        std::cerr << "Failed to open pipe\n";
+        return;
+    }
+}
+
+
+void MainWindow::readPcapFile(std::string &pcapFile) {
+    PcapReader reader(pcapFile);
+    if (reader.open()) {
+        reader.pcapRead();
+    }
 }
 

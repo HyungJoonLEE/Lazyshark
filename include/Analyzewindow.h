@@ -19,8 +19,6 @@ class AnalyzeWindow : public QDialog
 public:
     explicit AnalyzeWindow(QWidget *parent = nullptr);
     ~AnalyzeWindow();
-    void setVector(const QVector<QString>& vec);
-    void readPcapFile(std::string& pcapFile);
 private:
     Ui::AnalyzeWindow *ui;
     QVector<QString> pcapFiles;

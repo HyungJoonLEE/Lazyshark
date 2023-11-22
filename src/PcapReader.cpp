@@ -77,7 +77,7 @@ bool PcapReader::readNextPacket() {
 
 void PcapReader::packetHandler(u_char *userData, const struct pcap_pkthdr *pkthdr, const u_char *packet) {
     // Cast userData to PcapReader instance and process the packet
-    PcapReader *reader = reinterpret_cast<PcapReader*>(userData);
+    auto *reader = reinterpret_cast<PcapReader*>(userData);
     std::cout << "Packet length: " << pkthdr->len << std::endl;
     // Add more packet processing code here
 }

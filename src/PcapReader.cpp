@@ -3,8 +3,14 @@
 
 PcapReader::PcapReader(const std::string &filename) : filename(filename), descr(nullptr) {}
 
+
 PcapReader::~PcapReader() {
     close();
+}
+
+
+void PcapReader::setFileName(std::string &pcapFile) {
+    filename = pcapFile;
 }
 
 bool PcapReader::open() {
@@ -81,5 +87,4 @@ void PcapReader::packetHandler(u_char *userData, const struct pcap_pkthdr *pkthd
     std::cout << "Packet length: " << pkthdr->len << std::endl;
     // Add more packet processing code here
 }
-
 

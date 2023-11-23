@@ -83,7 +83,7 @@ void MainWindow::generateSnortLog(std::string &pcapFile) {
 
 
 void MainWindow::readPcapFile(std::string &pcapFile) {
-    PcapReader reader(pcapFile);
+    auto& reader = reinterpret_cast<PcapReader &>(PcapReader::getInstance(pcapFile));
     if (reader.open()) {
         reader.pcapRead();
     }

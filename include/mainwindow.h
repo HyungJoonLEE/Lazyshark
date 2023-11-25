@@ -31,7 +31,6 @@ public:
     ~MainWindow();
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
-    void readPcapFile(std::string& pcapFile);
     void generateSnortLog(std::string &pcapFile);
 
 private slots:

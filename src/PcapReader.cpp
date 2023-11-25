@@ -1,7 +1,7 @@
 #include "PcapReader.h"
 
 
-PcapReader::PcapReader(const std::string &filename) : filename(filename), descr(nullptr) {}
+PcapReader::PcapReader() :  descr(nullptr) {}
 
 
 PcapReader::~PcapReader() {
@@ -9,13 +9,9 @@ PcapReader::~PcapReader() {
 }
 
 
-void PcapReader::setFileName(std::string &pcapFile) {
-    filename = pcapFile;
-}
-
-bool PcapReader::open() {
+bool PcapReader::open(std::string &pcapFile) {
     char errbuf[PCAP_ERRBUF_SIZE];
-    descr = pcap_open_offline(filename.c_str(), errbuf);
+    descr = pcap_open_offline(pcapFile.c_str(), errbuf);
     if (descr == nullptr) {
         std::cerr << "pcap_open_offline() failed: " << errbuf << std::endl;
         return false;
@@ -24,7 +20,7 @@ bool PcapReader::open() {
 }
 
 
-void PcapReader::pcapRead() {
+void PcapReader::pcapRead(const std::string &pcapFile) {
     const u_char *packet;
     struct pcap_pkthdr header;
     struct ether_header *eth_header;
@@ -34,7 +30,7 @@ void PcapReader::pcapRead() {
     int packetCount = 0;
 
     char errbuf[PCAP_ERRBUF_SIZE];
-    pcap_t *handle = pcap_open_offline(filename.c_str(), errbuf);
+    pcap_t *handle = pcap_open_offline(pcapFile.c_str(), errbuf);
 
 
     while ((packet = pcap_next(handle, &header)) != nullptr) {

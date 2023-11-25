@@ -58,11 +58,17 @@ void MainWindow::on_submitBtn_clicked() {
         QMessageBox::about(this, "WARNING", "No file detected");
     }
     else {
+        auto& pcapReader = reinterpret_cast<PcapReader &>(PcapReader::getInstance());
         AnalyzeWindow analyzeWindow[fileCount];
         for (int i = 0; i < fileCount; i++) {
             std::string pcapFile = pcapVector.at(i).toUtf8().constData();
             generateSnortLog(pcapFile);
-            readPcapFile(pcapFile);
+            if (pcapReader.open(pcapFile)) {
+                pcapReader.pcapRead(pcapFile);
+            }
+            else {
+                QMessageBox::warning(this, "Error", "Something goes wrong while reading the file");
+            }
             analyzeWindow[i].setModal(true);
             analyzeWindow[i].exec();
         }
@@ -82,10 +88,4 @@ void MainWindow::generateSnortLog(std::string &pcapFile) {
 }
 
 
-void MainWindow::readPcapFile(std::string &pcapFile) {
-    auto& reader = reinterpret_cast<PcapReader &>(PcapReader::getInstance(pcapFile));
-    if (reader.open()) {
-        reader.pcapRead();
-    }
-}
 

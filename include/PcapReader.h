@@ -21,20 +21,18 @@ pcap_t	*pcap_open_offline(const char *, char *);
 
 class PcapReader {
 public:
-    PcapReader() {}
-    PcapReader(const std::string &filename);
-    PcapReader(const PcapReader& ref) {}
+    PcapReader();
+    PcapReader(const PcapReader& ref);
     PcapReader& operator= (const PcapReader& ref) {}
     ~PcapReader();
 
-    bool open();
+    bool open(std::string &pcapFile);
     void close();
-    void pcapRead();
+    void pcapRead(const std::string &pcapFile);
     bool readNextPacket();
-    void setFileName(std::string &pcapFile);
 
-    static PcapReader& getInstance(const std::string& fileName) {
-        static PcapReader pcapReader(fileName);
+    static PcapReader& getInstance() {
+        static PcapReader pcapReader;
         return pcapReader;
     }
 

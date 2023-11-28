@@ -2,7 +2,6 @@
 #define LAZYSHARK_PCAPREADER_H
 
 
-
 #include <pcap.h>
 #include <string>
 #include <iostream>

@@ -31,8 +31,6 @@ public:
     ~MainWindow();
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
-    void generateSnortLog(std::string &pcapFile);
-    static std::string extractFilename(const std::string& filepath);
 
 private slots:
     void on_submitBtn_clicked();

@@ -98,13 +98,13 @@ js_norm = default_js_norm
 appid =
 {
     -- appid requires this to use appids in rules
-    app_detector_dir = '/home/hj/Downloads/snort-openappid'
+--     app_detector_dir = '/home/hj/Downloads/snort-openappid'
 }
 
 appid_listener =
 {
     json_logging = true,
-    file = "/home/hj/Desktop/appid-output.log",
+--     file = "/home/hj/Desktop/appid-output.log",
 }
 
 --[[

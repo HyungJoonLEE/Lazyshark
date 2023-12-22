@@ -9,7 +9,7 @@ PcapReader::~PcapReader() {
 }
 
 
-bool PcapReader::open(std::string &pcapFile) {
+bool PcapReader::open(const std::string &pcapFile) {
     char errbuf[PCAP_ERRBUF_SIZE];
     descr = pcap_open_offline(pcapFile.c_str(), errbuf);
     if (descr == nullptr) {
@@ -20,7 +20,7 @@ bool PcapReader::open(std::string &pcapFile) {
 }
 
 
-void PcapReader::pcapRead(const std::string &pcapFile) {
+void PcapReader::readPcap(const std::string &pcapFile) {
     const u_char *packet;
     struct pcap_pkthdr header;
     struct ether_header *eth_header;

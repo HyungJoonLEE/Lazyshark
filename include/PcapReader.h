@@ -22,12 +22,13 @@ class PcapReader {
 public:
     PcapReader();
     PcapReader(const PcapReader& ref);
-    PcapReader& operator= (const PcapReader& ref) {}
+    PcapReader& operator=(const PcapReader& ref) {}
     ~PcapReader();
 
-    bool open(std::string &pcapFile);
+    bool open(const std::string &pcapFile);
     void close();
-    void pcapRead(const std::string &pcapFile);
+
+    void readPcap(const std::string &pcapFile);
     bool readNextPacket();
 
     static PcapReader& getInstance() {

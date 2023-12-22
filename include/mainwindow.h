@@ -15,7 +15,8 @@
 #include <QPen>
 #include <QPainter>
 #include <cstdlib>
-
+#include "PcapReader.h"
+#include "SnortRunner.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -29,8 +30,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
+    void processPcapFile(const int i, const std::string &pcapFile,
+                         PcapReader& PR, SnortRunner& SR);
 
 private slots:
     void on_submitBtn_clicked();

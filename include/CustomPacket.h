@@ -15,7 +15,6 @@ private:
     std::string destination_ip;
     unsigned short source_port;
     unsigned short destination_port;
-    std::string ascii_data;
     std::string data;
     std::string color;
 };

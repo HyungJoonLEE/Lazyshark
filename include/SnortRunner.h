@@ -14,7 +14,7 @@ public:
     ~SnortRunner();
     SnortRunner& operator= (const SnortRunner& ref) {}
 
-    void generateSnortLog(std::string &pcapFile);
+    void generateSnortLog(const std::string &pcapFile) const;
     static std::string extractFilename(const std::string &filepath);
 
     static SnortRunner& getInstance() {

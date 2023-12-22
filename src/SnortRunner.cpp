@@ -7,7 +7,7 @@ SnortRunner::SnortRunner() {}
 SnortRunner::~SnortRunner() {}
 
 
-void SnortRunner::generateSnortLog(std::string &pcapFile) {
+void SnortRunner::generateSnortLog(const std::string &pcapFile) const {
     std::string pcap = extractFilename(pcapFile);
     std::string cmd = "snort -c ./../luas/snort.lua "
                       "-R ./../rules/community.rules "

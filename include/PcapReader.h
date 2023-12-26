@@ -12,7 +12,8 @@
 #include <netinet/tcp.h>       // For struct tcphdr
 #include <netinet/udp.h>
 #include <vector>
-#include "CustomPacket.h"
+#include "Analyzewindow.h"
+#include "PacketVector.h"
 
 
 
@@ -44,7 +45,6 @@ private:
 
     std::string filename;
     pcap_t *descr;
-    std::vector<CustomPacket*> packetVector;
 };
 
 #endif //LAZYSHARK_PCAPREADER_H

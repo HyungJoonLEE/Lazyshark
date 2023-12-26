@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>AnalyzeWindow</class>
  <widget class="QDialog" name="AnalyzeWindow">
@@ -5,13 +6,79 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>974</width>
+    <height>628</height>
    </rect>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>1300</width>
+    <height>800</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>921</width>
+     <height>571</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string>No.</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Time</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Protocol</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Source</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>s_port</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>d_port</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Destination</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Length</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Alert Info</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string/>
+    </property>
+   </column>
+  </widget>
  </widget>
  <resources/>
  <connections/>

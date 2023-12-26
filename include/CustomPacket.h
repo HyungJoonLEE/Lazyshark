@@ -29,6 +29,7 @@ public:
     void setData(const char* data);
     void printPayload(const u_char *payload, size_t len);
     void print_hex_ascii_line (const u_char *payload, int len, int offset);
+    void clear();
 
     std::string formatTimestamp(long long timestamp, long long microseconds);
     unsigned int getNo() const;

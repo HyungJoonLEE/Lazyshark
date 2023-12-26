@@ -1,9 +1,7 @@
 #include "PcapReader.h"
 
 
-PcapReader::PcapReader() :  descr(nullptr) {
-    packetVector.reserve(10000);
-}
+PcapReader::PcapReader() :  descr(nullptr) {}
 
 
 PcapReader::~PcapReader() {
@@ -36,6 +34,7 @@ void PcapReader::readPcap(const std::string &pcapFile) {
 
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t *handle = pcap_open_offline(pcapFile.c_str(), errbuf);
+    PacketVector pv;
 
 
     while ((packet = pcap_next(handle, &header)) != nullptr) {
@@ -85,9 +84,8 @@ void PcapReader::readPcap(const std::string &pcapFile) {
             }
 
             std::cout << std::endl;
-            packetVector.push_back(cp);
+            pv.pushPacket(cp);
         }
-        delete cp;
     }
     pcap_close(handle);
 }

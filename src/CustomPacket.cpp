@@ -13,6 +13,7 @@ CustomPacket::~CustomPacket() {
     if (!m_color)   delete m_color;
 }
 
+
 struct ether_header *CustomPacket::getEthHdr() const { return m_ether; }
 struct ip *CustomPacket::getIpv4Hdr() const { return m_ipv4; }
 struct ip6_hdr *CustomPacket::getIpv6Hdr() const { return m_ipv6; }
@@ -166,6 +167,18 @@ void CustomPacket::print_hex_ascii_line(const u_char *payload, int len, int offs
     }
     printf("\n");
     sprintf(temp + strlen(temp), "\n");
+}
+
+void CustomPacket::clear() {
+    if (!m_no)      delete m_no;
+    if (!m_ether)   delete m_ether;
+    if (!m_ipv4)    delete m_ipv4;
+    if (!m_ipv6)    delete m_ipv6;
+    if (!m_tcp)     delete m_tcp;
+    if (!m_udp)     delete m_udp;
+    if (!m_data)     delete m_data;
+    if (!m_warning) delete m_warning;
+    if (!m_color)   delete m_color;
 }
 
 

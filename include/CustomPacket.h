@@ -2,21 +2,28 @@
 #define LAZYSHARK_PACKET_H
 
 #include <vector>
-#include <string>
+#include <cstring>
+#include <netinet/ip.h>
+#include <netinet/ip6.h>
+#include <netinet/tcp.h>
+#include <netinet/udp.h>
+#include <net/ethernet.h>
+#include <cstring>
+
+
+enum class Color { RED, ORANGE, YELLOW, WHITE };
 
 class CustomPacket {
 public:
-    CustomPacket();
-    ~CustomPacket();
+    void setEthHdr(const void *eth_hdr, size_t size);
+    struct ether_header* getEthHdr() const;
 private:
-    unsigned int packet_num;
-    std::string protocol;
-    std::string source_ip;
-    std::string destination_ip;
-    unsigned short source_port;
-    unsigned short destination_port;
-    std::string data;
-    std::string color;
+    struct ether_header* m_ether;
+    struct ip* m_ip4;
+    struct ip6_hdr* m_ip6;
+    struct tcp_hdr* m_tcp;
+    struct udp_hdr* m_udp;
+    Color m_color;
 };
 
 #endif //LAZYSHARK_PACKET_H

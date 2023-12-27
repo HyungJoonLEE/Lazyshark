@@ -7,6 +7,8 @@ AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
     ui(new Ui::AnalyzeWindow)
 {
     ui->setupUi(this);
+    QSize screenSize = QGuiApplication::primaryScreen()->size();
+    this->resize(screenSize);
 }
 
 
@@ -69,4 +71,10 @@ void AnalyzeWindow::setVectorSize(size_t num) {
 
 std::vector<CustomPacket *>& AnalyzeWindow::getVector() {
     return m_av;
+}
+
+
+void AnalyzeWindow::closeEvent(QCloseEvent *event) {
+    qDebug() << "Hello";
+    QDialog::closeEvent(event);
 }

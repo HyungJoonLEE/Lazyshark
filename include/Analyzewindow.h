@@ -9,7 +9,9 @@
 #include <QString>
 #include <QTableWidget>
 #include <QHeaderView>
-#include "PcapReader.h"
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include "CustomPacket.h"
 
 namespace Ui {
 class AnalyzeWindow;
@@ -22,10 +24,14 @@ public:
     explicit AnalyzeWindow(QWidget *parent = nullptr);
     ~AnalyzeWindow();
     void setupTable();
+    void printVector();
+    void setVectorSize(size_t num);
+    std::vector<CustomPacket*>& getVector();
 
 private:
     Ui::AnalyzeWindow *ui;
     QTableWidget* table;
+    std::vector<CustomPacket*> m_av;
 };
 
 #endif // ANALYZEWINDOW_H

@@ -20,7 +20,7 @@ bool PcapReader::open(const std::string &pcapFile) {
 }
 
 
-void PcapReader::readPcap(const std::string &pcapFile) {
+void PcapReader::readPcap(const std::string &pcapFile, std::vector<CustomPacket*> &pv) {
     const u_char *packet;
     struct pcap_pkthdr header;
     struct ether_header *eth_header;
@@ -34,15 +34,13 @@ void PcapReader::readPcap(const std::string &pcapFile) {
 
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t *handle = pcap_open_offline(pcapFile.c_str(), errbuf);
-    PacketVector pv;
-
 
     while ((packet = pcap_next(handle, &header)) != nullptr) {
         auto* cp = new CustomPacket();
         packetCount++;
 
         cp->setNo(packetCount);
-        std::cout << "Packet #" << cp->getNo() << std::endl;
+//        std::cout << "Packet #" << cp->getNo() << std::endl;
 
         eth_header = (struct ether_header *) packet;
         cp->setEthHdr(eth_header);
@@ -52,12 +50,12 @@ void PcapReader::readPcap(const std::string &pcapFile) {
             ip_header = (struct ip *) (packet + sizeof(struct ether_header));
             cp->setIpv4Hdr(ip_header);
 
-            std::cout << "Time: " << header.ts.tv_sec << std::endl;
-            std::cout << "Source IP: " << inet_ntoa(cp->getIpv4Hdr()->ip_src) << std::endl;
-            std::cout << "Destination IP: " << inet_ntoa(cp->getIpv4Hdr()->ip_dst) << std::endl;
-            std::cout << "Protocol: " << (unsigned short) cp->getIpv4Hdr()->ip_p << std::endl;
-            std::cout << "Length: " << cp->getIpv4Hdr()->ip_hl * 4 << std::endl;
-            std::cout << "Total Length: " << (short) ntohs(cp->getIpv4Hdr()->ip_len) << std::endl;
+//            std::cout << "Time: " << header.ts.tv_sec << std::endl;
+//            std::cout << "Source IP: " << inet_ntoa(cp->getIpv4Hdr()->ip_src) << std::endl;
+//            std::cout << "Destination IP: " << inet_ntoa(cp->getIpv4Hdr()->ip_dst) << std::endl;
+//            std::cout << "Protocol: " << (unsigned short) cp->getIpv4Hdr()->ip_p << std::endl;
+//            std::cout << "Length: " << cp->getIpv4Hdr()->ip_hl * 4 << std::endl;
+//            std::cout << "Total Length: " << (short) ntohs(cp->getIpv4Hdr()->ip_len) << std::endl;
 
             if (ip_header->ip_p == IPPROTO_TCP) {
                 tcp_header = (struct tcphdr *) (packet + sizeof(struct ether_header) + sizeof(struct ip));
@@ -65,12 +63,12 @@ void PcapReader::readPcap(const std::string &pcapFile) {
                 payload_size = ntohs(cp->getIpv4Hdr()->ip_len) - cp->getIpv4Hdr()->ip_hl * 4 - sizeof(struct tcphdr);
 
                 cp->setTCPHdr(tcp_header);
-                std::cout << "Source Port: " << ntohs(cp->getTCPHdr()->th_sport) << std::endl;
-                std::cout << "Destination Port: " << ntohs(cp->getTCPHdr()->th_dport) << std::endl;
+//                std::cout << "Source Port: " << ntohs(cp->getTCPHdr()->th_sport) << std::endl;
+//                std::cout << "Destination Port: " << ntohs(cp->getTCPHdr()->th_dport) << std::endl;
 
                 if (payload_size > 0) {
-                    printf("    Payload (%d bytes):\n", payload_size);
-                    cp->printPayload(reinterpret_cast<const u_char *>(payload), payload_size);
+//                    printf("    Payload (%d bytes):\n", payload_size);
+//                    cp->printPayload(reinterpret_cast<const u_char *>(payload), payload_size);
                 }
             }
             else if (ip_header->ip_p == IPPROTO_UDP) {
@@ -79,12 +77,12 @@ void PcapReader::readPcap(const std::string &pcapFile) {
 
                 cp->setUDPHdr(udp_header);
 
-                std::cout << "Source Port: " << ntohs(cp->getUDPHdr()->uh_sport) << std::endl;
-                std::cout << "Destination Port: " << ntohs(cp->getUDPHdr()->uh_dport) << std::endl;
+//                std::cout << "Source Port: " << ntohs(cp->getUDPHdr()->uh_sport) << std::endl;
+//                std::cout << "Destination Port: " << ntohs(cp->getUDPHdr()->uh_dport) << std::endl;
             }
 
             std::cout << std::endl;
-            pv.pushPacket(cp);
+            pv.push_back(cp);
         }
     }
     pcap_close(handle);

@@ -50,10 +50,11 @@ void MainWindow::dropEvent(QDropEvent *e) {
 
 void MainWindow::processPcapFile(const int i, const std::string &pcapFile,
                                  PcapReader &PR,
-                                 SnortRunner &SR) {
+                                 SnortRunner &SR,
+                                 std::vector<CustomPacket *> &pv) {
     SR.generateSnortLog(pcapFile);
     if (PR.open(pcapFile))
-        PR.readPcap(pcapFile);
+        PR.readPcap(pcapFile, pv);
     else
         QMessageBox::warning(this, "Error",
                              "Something goes wrong while reading the file");
@@ -70,9 +71,10 @@ void MainWindow::on_submitBtn_clicked() {
         auto &snortRunner = reinterpret_cast<SnortRunner &>(SnortRunner::getInstance());
 
         for (int i = 0; i < fileCount; i++) {
+            analyzeWindow[i].setVectorSize(DEFAULT_SIZE);
             const std::string pcapFile = pcapVector[i].toUtf8().constData();
-            processPcapFile(i, pcapFile, pcapReader, snortRunner);
-
+            processPcapFile(i, pcapFile, pcapReader, snortRunner, analyzeWindow[i].getVector());
+            analyzeWindow[i].printVector();
             analyzeWindow[i].setModal(true);
             analyzeWindow[i].exec();
         }

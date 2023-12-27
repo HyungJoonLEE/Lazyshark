@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#define DEFAULT_SIZE 10000
+
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QDragEnterEvent>
@@ -34,7 +36,7 @@ public:
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
     void processPcapFile(const int i, const std::string &pcapFile,
-                         PcapReader& PR, SnortRunner& SR);
+                         PcapReader& PR, SnortRunner& SR, std::vector<CustomPacket *> &pv);
 
 private slots:
     void on_submitBtn_clicked();

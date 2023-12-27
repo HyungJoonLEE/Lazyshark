@@ -13,8 +13,6 @@
 #include <netinet/udp.h>
 #include <vector>
 #include "Analyzewindow.h"
-#include "PacketVector.h"
-
 
 
 extern "C"
@@ -32,7 +30,7 @@ public:
     bool open(const std::string &pcapFile);
     void close();
 
-    void readPcap(const std::string &pcapFile);
+    void readPcap(const std::string &pcapFile, std::vector<CustomPacket*> &pv);
     bool readNextPacket();
 
     static PcapReader& getInstance() {

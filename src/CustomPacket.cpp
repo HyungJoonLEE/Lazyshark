@@ -2,7 +2,7 @@
 
 
 CustomPacket::~CustomPacket() {
-    if (!m_no)      delete m_no;
+    if (!m_time)    delete m_time;
     if (!m_ether)   delete m_ether;
     if (!m_ipv4)    delete m_ipv4;
     if (!m_ipv6)    delete m_ipv6;
@@ -14,17 +14,19 @@ CustomPacket::~CustomPacket() {
 }
 
 
-struct ether_header *CustomPacket::getEthHdr() const { return m_ether; }
-struct ip *CustomPacket::getIpv4Hdr() const { return m_ipv4; }
-struct ip6_hdr *CustomPacket::getIpv6Hdr() const { return m_ipv6; }
-struct tcphdr *CustomPacket::getTCPHdr() const { return m_tcp; }
-struct udphdr *CustomPacket::getUDPHdr() const { return m_udp; }
-unsigned int CustomPacket::getNo() const { return *m_no; }
+const std::string *CustomPacket::getTime() { return m_time; }
+const struct ether_header *CustomPacket::getEthHdr() { return m_ether; }
+const struct ip *CustomPacket::getIpv4Hdr() { return m_ipv4; }
+const struct ip6_hdr *CustomPacket::getIpv6Hdr() { return m_ipv6; }
+const struct tcphdr *CustomPacket::getTCPHdr() { return m_tcp; }
+const struct udphdr *CustomPacket::getUDPHdr() { return m_udp; }
 
 
-void CustomPacket::setNo(const unsigned int packetCount) {
-    m_no = new unsigned int;
-    *m_no = packetCount;
+void CustomPacket::setTime(time_t rawTime) {
+    std::tm* timeInfo = std::localtime(&rawTime);
+    std::stringstream ss;
+    ss << std::put_time(timeInfo, "%Y/%m/%d-%H:%M:%S");
+    m_time = new std::string(ss.str());
 }
 
 
@@ -55,25 +57,6 @@ void CustomPacket::setUDPHdr(const struct udphdr *hdr) {
 
 void CustomPacket::setData(const char *data) {
     allocateAndCopy(&m_data, data, sizeof(struct tcphdr));
-}
-
-
-std::string CustomPacket::formatTimestamp(long long int timestamp, long long int microseconds) {
-    // Convert the timestamp to system time
-    std::chrono::system_clock::time_point tp = std::chrono::system_clock::from_time_t(timestamp);
-
-    // Convert to time_t for breaking down into components
-    std::time_t rawTime = std::chrono::system_clock::to_time_t(tp);
-    std::tm* timeInfo = std::localtime(&rawTime);
-
-    // Use stringstream for formatting
-    std::stringstream ss;
-    ss << std::put_time(timeInfo, "%m/%d-%H:%M:%S");
-
-    // Append microseconds
-    ss << "." << std::setfill('0') << std::setw(6) << microseconds;
-
-    return ss.str();
 }
 
 
@@ -170,17 +153,14 @@ void CustomPacket::print_hex_ascii_line(const u_char *payload, int len, int offs
 }
 
 void CustomPacket::clear() {
-    if (!m_no)      delete m_no;
-    if (!m_ether)   delete m_ether;
-    if (!m_ipv4)    delete m_ipv4;
-    if (!m_ipv6)    delete m_ipv6;
-    if (!m_tcp)     delete m_tcp;
-    if (!m_udp)     delete m_udp;
-    if (!m_data)     delete m_data;
+    if (!m_time) delete m_time;
+    if (!m_ether) delete m_ether;
+    if (!m_ipv4) delete m_ipv4;
+    if (!m_ipv6) delete m_ipv6;
+    if (!m_tcp) delete m_tcp;
+    if (!m_udp) delete m_udp;
+    if (!m_data) delete m_data;
     if (!m_warning) delete m_warning;
-    if (!m_color)   delete m_color;
+    if (!m_color) delete m_color;
 }
-
-
-
 

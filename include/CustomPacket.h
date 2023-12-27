@@ -20,7 +20,7 @@ enum class Color { RED, ORANGE, YELLOW, WHITE };
 
 class CustomPacket {
 public:
-    void setNo(const unsigned int packetCount);
+    void setTime(time_t rawTime);
     void setEthHdr(const struct ether_header* hdr);
     void setIpv4Hdr(const struct ip* hdr);
     void setIpv6Hdr(const struct ip6_hdr* hdr);
@@ -31,18 +31,17 @@ public:
     void print_hex_ascii_line (const u_char *payload, int len, int offset);
     void clear();
 
-    std::string formatTimestamp(long long timestamp, long long microseconds);
-    unsigned int getNo() const;
-    struct ether_header* getEthHdr() const;
-    struct ip* getIpv4Hdr() const;
-    struct ip6_hdr* getIpv6Hdr() const;
-    struct tcphdr* getTCPHdr() const;
-    struct udphdr* getUDPHdr() const;
+    const std::string* getTime();
+    const struct ether_header* getEthHdr();
+    const struct ip* getIpv4Hdr();
+    const struct ip6_hdr* getIpv6Hdr();
+    const struct tcphdr* getTCPHdr();
+    const struct udphdr* getUDPHdr();
 
     ~CustomPacket();
 
 private:
-    unsigned int* m_no;
+    std::string* m_time;
     struct ether_header* m_ether;
     struct ip* m_ipv4;
     struct ip6_hdr* m_ipv6;

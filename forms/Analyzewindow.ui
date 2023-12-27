@@ -30,11 +30,6 @@
    </property>
    <column>
     <property name="text">
-     <string>No.</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
      <string>Time</string>
     </property>
    </column>

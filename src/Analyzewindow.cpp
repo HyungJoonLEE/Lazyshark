@@ -6,6 +6,7 @@ AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AnalyzeWindow)
 {
+    // AnalyzeWindow size
     ui->setupUi(this);
     QSize screenSize = QGuiApplication::primaryScreen()->size();
     this->resize(screenSize);
@@ -33,8 +34,22 @@ void AnalyzeWindow::printVector() {
 //        std::cout << "Source Port: " << ntohs(cp->getTCPHdr()->th_sport) << std::endl;
 //        std::cout << "Destination Port: " << ntohs(cp->getTCPHdr()->th_dport) << "\n" << std::endl;
 //    }
+    int desiredWidth = this->width() - 300;
+    int desiredHeight = this->height() - 200;
+    ui->tableWidget->setFixedWidth(desiredWidth);
+    ui->tableWidget->setFixedHeight(desiredHeight);
+
     size_t rowCount = m_av.size();
     ui->tableWidget->setRowCount(rowCount);
+    ui->tableWidget->setColumnWidth(0, 230);
+    ui->tableWidget->setColumnWidth(1, 100);
+    ui->tableWidget->setColumnWidth(2, 180);
+    ui->tableWidget->setColumnWidth(3, 100);
+    ui->tableWidget->setColumnWidth(4, 100);
+    ui->tableWidget->setColumnWidth(5, 180);
+    ui->tableWidget->setColumnWidth(6, 100);
+    ui->tableWidget->setColumnWidth(7, 500);
+
     for (int i = 0; i < rowCount; i++) {
         const char* ipSrc = inet_ntoa(m_av[i]->getIpv4Hdr()->ip_src);
         const char* ipDst = inet_ntoa(m_av[i]->getIpv4Hdr()->ip_dst);
@@ -60,6 +75,12 @@ void AnalyzeWindow::printVector() {
             }
         }
         ui->tableWidget->setItem(i, 7, new QTableWidgetItem(QString("TEST HELLO")));
+        for (int col = 0; col < ui->tableWidget->columnCount(); ++col) {
+            QTableWidgetItem* item = ui->tableWidget->item(i, col);
+            if (item) {
+                item->setTextAlignment(Qt::AlignCenter);
+            }
+        }
     }
 }
 

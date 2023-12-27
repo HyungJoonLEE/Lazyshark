@@ -59,7 +59,7 @@ void PcapReader::readPcap(const std::string &pcapFile, std::vector<CustomPacket*
 
                 if (payload_size > 0) {
 //                    printf("    Payload (%d bytes):\n", payload_size);
-                    cp->printPayload(reinterpret_cast<const u_char *>(payload), payload_size);
+//                    cp->printPayload(reinterpret_cast<const u_char *>(payload), payload_size);
                 }
             }
             else if (ip_header->ip_p == IPPROTO_UDP) {

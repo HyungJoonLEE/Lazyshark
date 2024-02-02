@@ -52,7 +52,7 @@ void MainWindow::processPcapFile(const int i, const std::string &pcapFile,
                                  PcapReader &PR,
                                  SnortRunner &SR,
                                  std::vector<CustomPacket *> &pv) {
-    SR.generateSnortLog(pcapFile);
+//    SR.generateSnortLog(pcapFile);
     if (PR.open(pcapFile))
         PR.readPcap(pcapFile, pv);
     else
@@ -78,6 +78,8 @@ void MainWindow::on_submitBtn_clicked() {
             analyzeWindow[i].setModal(true);
             analyzeWindow[i].exec();
         }
+
+        // TODO: continuously popup after AnalyzeWindow closed PcapVector need to be cleared
     }
 }
 

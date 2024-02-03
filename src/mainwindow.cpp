@@ -6,18 +6,7 @@
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-
-    QImage image("./../images/main.png");
-    QPainter p(&image);
-    p.setPen(QPen(Qt::white));
-    p.setFont(QFont("Arial", 20, QFont::Bold));
-    p.drawText(QRect(0, -10, width(), height()), Qt::AlignCenter,
-               "Drag File Here");
-    ui->mainPic->setPixmap(QPixmap::fromImage(image));
-
-    QIcon ButtonIcon(QPixmap("./../images/runIcon.png"));
-    ui->scanBtn->setIcon(ButtonIcon);
-    ui->scanBtn->setIconSize(QSize(30, 30));
+    move(QGuiApplication::screens().at(0)->geometry().center() - frameGeometry().center());
     setAcceptDrops(true);
 }
 
@@ -55,7 +44,8 @@ void MainWindow::processPcapFile(const int i, const std::string &pcapFile,
     if (PR.open(pcapFile))
         PR.readPcap(pcapFile);
     else
-        QMessageBox::warning(this, "Error",
+        QMessageBox::warning(this,
+                             "Error",
                              "Something goes wrong while reading the file");
 }
 

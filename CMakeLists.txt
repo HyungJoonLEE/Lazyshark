@@ -54,6 +54,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(LAZYSHARK
         MANUAL_FINALIZATION
         ${SOURCES}
+        Resource/img.qrc
     )
 else()
     include (GNUInstallDirs)

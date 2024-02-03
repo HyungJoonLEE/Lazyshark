@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>cloud.png</file>
+        <file>main.png</file>
+        <file>runIcon.png</file>
+    </qresource>
+</RCC>

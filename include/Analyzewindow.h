@@ -32,7 +32,7 @@ public:
     void setVectorSize(size_t num);
     std::vector<CustomPacket*>& getVector();
 protected:
-    void closeEvent(QCloseEvent *event);
+//    void closeEvent(QCloseEvent *event);
 private:
     Ui::AnalyzeWindow *ui;
     QTableWidget* table;

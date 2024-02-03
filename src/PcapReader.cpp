@@ -32,6 +32,7 @@ void PcapReader::readPcap(const std::string &pcapFile, std::vector<CustomPacket*
     unsigned int payload_size = 0;
 
 
+
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t *handle = pcap_open_offline(pcapFile.c_str(), errbuf);
 
@@ -39,6 +40,7 @@ void PcapReader::readPcap(const std::string &pcapFile, std::vector<CustomPacket*
         auto* cp = new CustomPacket();
         packetCount++;
 
+        cp->setNo(packetCount);
 //        std::cout << "Packet #" << cp->getNo() << std::endl;
         cp->setTime(header.ts.tv_sec);
         eth_header = (struct ether_header *) packet;

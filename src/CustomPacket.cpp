@@ -13,13 +13,18 @@ CustomPacket::~CustomPacket() {
     if (!m_color)   delete m_color;
 }
 
+const unsigned int CustomPacket::getNo() { return No; }
+const string* CustomPacket::getTime() { return m_time; }
+const struct ether_header* CustomPacket::getEthHdr() { return m_ether; }
+const struct ip* CustomPacket::getIpv4Hdr() { return m_ipv4; }
+const struct ip6_hdr* CustomPacket::getIpv6Hdr() { return m_ipv6; }
+const struct tcphdr* CustomPacket::getTCPHdr() { return m_tcp; }
+const struct udphdr* CustomPacket::getUDPHdr() { return m_udp; }
 
-const std::string *CustomPacket::getTime() { return m_time; }
-const struct ether_header *CustomPacket::getEthHdr() { return m_ether; }
-const struct ip *CustomPacket::getIpv4Hdr() { return m_ipv4; }
-const struct ip6_hdr *CustomPacket::getIpv6Hdr() { return m_ipv6; }
-const struct tcphdr *CustomPacket::getTCPHdr() { return m_tcp; }
-const struct udphdr *CustomPacket::getUDPHdr() { return m_udp; }
+
+void CustomPacket::setNo(unsigned int i) {
+    this->No = i;
+}
 
 
 void CustomPacket::setTime(time_t rawTime) {

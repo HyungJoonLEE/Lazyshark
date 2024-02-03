@@ -38,7 +38,7 @@ void MainWindow::dropEvent(QDropEvent *e) {
 
 
 
-void MainWindow::processPcapFile(const int i, const std::string &pcapFile,
+void MainWindow::processPcapFile(const int i, const string &pcapFile,
                                  PcapReader &PR,
                                  SnortRunner &SR) {
     SR.generateSnortLog(pcapFile);
@@ -63,10 +63,10 @@ void MainWindow::on_SubmitBtn_clicked()
         auto &snortRunner = reinterpret_cast<SnortRunner &>(SnortRunner::getInstance());
 
         for (int i = 0; i < fileCount; i++) {
-            const std::string pcapFile = pcapVector[i].toUtf8().constData();
+            const string pcapFile = pcapVector[i].toUtf8().constData();
             processPcapFile(i, pcapFile, pcapReader, snortRunner);
-
             analyzeWindow[i].setModal(true);
+            analyzeWindow[i].fillTable();
             analyzeWindow[i].exec();
         }
     }

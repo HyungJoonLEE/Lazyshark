@@ -11,18 +11,18 @@ PcapReader::~PcapReader() {
 }
 
 
-bool PcapReader::open(const std::string &pcapFile) {
+bool PcapReader::open(const string &pcapFile) {
     char errbuf[PCAP_ERRBUF_SIZE];
     descr = pcap_open_offline(pcapFile.c_str(), errbuf);
     if (descr == nullptr) {
-        std::cerr << "pcap_open_offline() failed: " << errbuf << std::endl;
+        cerr << "pcap_open_offline() failed: " << errbuf << endl;
         return false;
     }
     return true;
 }
 
 
-void PcapReader::readPcap(const std::string &pcapFile) {
+void PcapReader::readPcap(const string &pcapFile) {
     const u_char *packet;
     struct pcap_pkthdr header;
     struct ether_header *eth_header;
@@ -43,7 +43,7 @@ void PcapReader::readPcap(const std::string &pcapFile) {
         packetCount++;
 
         cp->setNo(packetCount);
-        std::cout << "Packet #" << cp->getNo() << std::endl;
+        cout << "Packet #" << cp->getNo() << endl;
 
         eth_header = (struct ether_header *) packet;
         cp->setEthHdr(eth_header);
@@ -53,12 +53,12 @@ void PcapReader::readPcap(const std::string &pcapFile) {
             ip_header = (struct ip *) (packet + sizeof(struct ether_header));
             cp->setIpv4Hdr(ip_header);
 
-            std::cout << "Time: " << header.ts.tv_sec << std::endl;
-            std::cout << "Source IP: " << inet_ntoa(cp->getIpv4Hdr()->ip_src) << std::endl;
-            std::cout << "Destination IP: " << inet_ntoa(cp->getIpv4Hdr()->ip_dst) << std::endl;
-            std::cout << "Protocol: " << (unsigned short) cp->getIpv4Hdr()->ip_p << std::endl;
-            std::cout << "Length: " << cp->getIpv4Hdr()->ip_hl * 4 << std::endl;
-            std::cout << "Total Length: " << (short) ntohs(cp->getIpv4Hdr()->ip_len) << std::endl;
+            cout << "Time: " << header.ts.tv_sec << endl;
+            cout << "Source IP: " << inet_ntoa(cp->getIpv4Hdr()->ip_src) << endl;
+            cout << "Destination IP: " << inet_ntoa(cp->getIpv4Hdr()->ip_dst) << endl;
+            cout << "Protocol: " << (unsigned short) cp->getIpv4Hdr()->ip_p << endl;
+            cout << "Length: " << cp->getIpv4Hdr()->ip_hl * 4 << endl;
+            cout << "Total Length: " << (short) ntohs(cp->getIpv4Hdr()->ip_len) << endl;
 
             if (ip_header->ip_p == IPPROTO_TCP) {
                 tcp_header = (struct tcphdr *) (packet + sizeof(struct ether_header) + sizeof(struct ip));
@@ -66,8 +66,8 @@ void PcapReader::readPcap(const std::string &pcapFile) {
                 payload_size = ntohs(cp->getIpv4Hdr()->ip_len) - cp->getIpv4Hdr()->ip_hl * 4 - sizeof(struct tcphdr);
 
                 cp->setTCPHdr(tcp_header);
-                std::cout << "Source Port: " << ntohs(cp->getTCPHdr()->th_sport) << std::endl;
-                std::cout << "Destination Port: " << ntohs(cp->getTCPHdr()->th_dport) << std::endl;
+                cout << "Source Port: " << ntohs(cp->getTCPHdr()->th_sport) << endl;
+                cout << "Destination Port: " << ntohs(cp->getTCPHdr()->th_dport) << endl;
 
                 if (payload_size > 0) {
                     printf("    Payload (%d bytes):\n", payload_size);
@@ -80,11 +80,11 @@ void PcapReader::readPcap(const std::string &pcapFile) {
 
                 cp->setUDPHdr(udp_header);
 
-                std::cout << "Source Port: " << ntohs(cp->getUDPHdr()->uh_sport) << std::endl;
-                std::cout << "Destination Port: " << ntohs(cp->getUDPHdr()->uh_dport) << std::endl;
+                cout << "Source Port: " << ntohs(cp->getUDPHdr()->uh_sport) << endl;
+                cout << "Destination Port: " << ntohs(cp->getUDPHdr()->uh_dport) << endl;
             }
 
-            std::cout << std::endl;
+            cout << endl;
             packetVector.push_back(cp);
         }
         delete cp;
@@ -109,7 +109,7 @@ bool PcapReader::readNextPacket() {
 void PcapReader::packetHandler(u_char *userData, const struct pcap_pkthdr *pkthdr, const u_char *packet) {
     // Cast userData to PcapReader instance and process the packet
     auto *reader = reinterpret_cast<PcapReader*>(userData);
-    std::cout << "Packet length: " << pkthdr->len << std::endl;
+    cout << "Packet length: " << pkthdr->len << endl;
     // Add more packet processing code here
 }
 

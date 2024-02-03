@@ -57,20 +57,20 @@ void CustomPacket::setData(const char *data) {
 }
 
 
-std::string CustomPacket::formatTimestamp(long long int timestamp, long long int microseconds) {
+string CustomPacket::formatTimestamp(long long int timestamp, long long int microseconds) {
     // Convert the timestamp to system time
-    std::chrono::system_clock::time_point tp = std::chrono::system_clock::from_time_t(timestamp);
+    chrono::system_clock::time_point tp = chrono::system_clock::from_time_t(timestamp);
 
     // Convert to time_t for breaking down into components
-    std::time_t rawTime = std::chrono::system_clock::to_time_t(tp);
-    std::tm* timeInfo = std::localtime(&rawTime);
+    time_t rawTime = chrono::system_clock::to_time_t(tp);
+    tm* timeInfo = localtime(&rawTime);
 
     // Use stringstream for formatting
-    std::stringstream ss;
-    ss << std::put_time(timeInfo, "%m/%d-%H:%M:%S");
+    stringstream ss;
+    ss << put_time(timeInfo, "%m/%d-%H:%M:%S");
 
     // Append microseconds
-    ss << "." << std::setfill('0') << std::setw(6) << microseconds;
+    ss << "." << setfill('0') << setw(6) << microseconds;
 
     return ss.str();
 }

@@ -20,7 +20,7 @@ enum class Color { RED, ORANGE, YELLOW, WHITE };
 
 class CustomPacket {
 public:
-    void setNo(const unsigned int packetCount);
+    void setNo(unsigned int packetCount);
     void setEthHdr(const struct ether_header* hdr);
     void setIpv4Hdr(const struct ip* hdr);
     void setIpv6Hdr(const struct ip6_hdr* hdr);
@@ -42,6 +42,7 @@ public:
 
 private:
     unsigned int* m_no;
+    char* m_time;
     struct ether_header* m_ether;
     struct ip* m_ipv4;
     struct ip6_hdr* m_ipv6;

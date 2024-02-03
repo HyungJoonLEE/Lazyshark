@@ -28,10 +28,10 @@ public:
     PcapReader& operator=(const PcapReader& ref) {}
     ~PcapReader();
 
-    bool open(const std::string &pcapFile);
+    bool open(const string &pcapFile);
     void close();
 
-    void readPcap(const std::string &pcapFile);
+    void readPcap(const string &pcapFile);
     bool readNextPacket();
 
     static PcapReader& getInstance() {
@@ -42,9 +42,9 @@ public:
 private:
     static void packetHandler(u_char *userData, const struct pcap_pkthdr *pkthdr, const u_char *packet);
 
-    std::string filename;
+    string filename;
     pcap_t *descr;
-    std::vector<CustomPacket*> packetVector;
+    vector<CustomPacket*> packetVector;
 };
 
 #endif //LAZYSHARK_PCAPREADER_H

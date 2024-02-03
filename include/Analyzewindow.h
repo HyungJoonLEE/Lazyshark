@@ -8,6 +8,7 @@
 #include <QVector>
 #include <QString>
 #include <QHeaderView>
+#include "CustomPacket.h"
 
 namespace Ui {
 class AnalyzeWindow;
@@ -20,9 +21,11 @@ class AnalyzeWindow : public QDialog
 public:
     explicit AnalyzeWindow(QWidget *parent = nullptr);
     ~AnalyzeWindow();
+    void fillTable();
 private:
     Ui::AnalyzeWindow *ui;
     QVector<QString> pcapFiles;
+    vector<CustomPacket*> m_av;
 };
 
 #endif // ANALYZEWINDOW_H

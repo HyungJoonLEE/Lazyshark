@@ -32,14 +32,6 @@ set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 # Add the forms directory to the AUTOUIC search paths
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
 
-### Require out-of-source builds
-# this still creates a CMakeFiles directory and CMakeCache.txt- can we delete them?
-file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
-if (EXISTS "${LOC_PATH}")
-    message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build subdirectory. Feel free to remove CMakeCache.txt and CMakeFiles.")
-endif ()
-
-
 include_directories(${FORMS_DIR})
 include_directories(${INCLUDE_DIR})
 include_directories(${SOURCE_DIR})
@@ -65,9 +57,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Resource/img.qrc
     )
 else()
-    include(GNUInstallDirs)
+    include (GNUInstallDirs)
     include(FindPCAP.cmake)
-    add_executable(${PROJECT_NAME} ${SOURCES})
+    add_executable(${PROJECT_NAME}
+            ${SOURCES}
+    )
 endif()
 
 # Add the target includes for ${PROJECT_NAME}target_include_directories(${PROJECT_NAME} PRIVATE ${FORMS_DIR})
@@ -82,12 +76,12 @@ install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(${PROJECT_NAME})
-endif()
+#if(QT_VERSION_MAJOR EQUAL 6)
+#    qt_finalize_executable(${PROJECT_NAME})
+#endif()
 
 # Add the forms directory to the AUTOUIC search paths
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core)
-
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PCAP_LIBRARY})

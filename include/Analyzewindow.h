@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QVector>
 #include <QString>
+#include <QHeaderView>
 
 namespace Ui {
 class AnalyzeWindow;

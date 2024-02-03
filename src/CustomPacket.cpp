@@ -8,7 +8,7 @@ CustomPacket::~CustomPacket() {
     if (!m_ipv6)    delete m_ipv6;
     if (!m_tcp)     delete m_tcp;
     if (!m_udp)     delete m_udp;
-    if (!m_data)     delete m_data;
+    if (!m_data)    delete m_data;
     if (!m_warning) delete m_warning;
     if (!m_color)   delete m_color;
 }

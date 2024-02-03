@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QApplication>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QDragEnterEvent>
@@ -37,7 +38,7 @@ public:
                          PcapReader& PR, SnortRunner& SR);
 
 private slots:
-    void on_submitBtn_clicked();
+    void on_SubmitBtn_clicked();
 
 private:
     Ui::MainWindow *ui;

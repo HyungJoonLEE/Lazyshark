@@ -32,6 +32,14 @@ set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 # Add the forms directory to the AUTOUIC search paths
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
 
+### Require out-of-source builds
+# this still creates a CMakeFiles directory and CMakeCache.txt- can we delete them?
+file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
+if (EXISTS "${LOC_PATH}")
+    message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build subdirectory. Feel free to remove CMakeCache.txt and CMakeFiles.")
+endif ()
+
+
 include_directories(${FORMS_DIR})
 include_directories(${INCLUDE_DIR})
 include_directories(${SOURCE_DIR})
@@ -51,39 +59,35 @@ find_package(Qt6Widgets REQUIRED)
 
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(LAZYSHARK
+    qt_add_executable(${PROJECT_NAME}
         MANUAL_FINALIZATION
         ${SOURCES}
         Resource/img.qrc
     )
 else()
-    include (GNUInstallDirs)
+    include(GNUInstallDirs)
     include(FindPCAP.cmake)
-    add_executable(LAZYSHARK
-            ${SOURCES}
-    )
+    add_executable(${PROJECT_NAME} ${SOURCES})
 endif()
 
-# Add the target includes for LAZYSHARK
-target_include_directories(LAZYSHARK PRIVATE ${FORMS_DIR})
-target_include_directories(LAZYSHARK PRIVATE ${INCLUDE_DIR})
-target_include_directories(LAZYSHARK PRIVATE ${SOURCE_DIR})
+# Add the target includes for ${PROJECT_NAME}target_include_directories(${PROJECT_NAME} PRIVATE ${FORMS_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${SOURCE_DIR})
 
 
 include(GNUInstallDirs)
-install(TARGETS LAZYSHARK
+install(TARGETS ${PROJECT_NAME}
         BUNDLE DESTINATION .
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(LAZYSHARK)
+    qt_finalize_executable(${PROJECT_NAME})
 endif()
 
 # Add the forms directory to the AUTOUIC search paths
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
-target_link_libraries(LAZYSHARK PRIVATE Qt6::Widgets)
-target_link_libraries(LAZYSHARK PRIVATE Qt6::Core)
-target_link_libraries(LAZYSHARK PRIVATE ${PCAP_LIBRARY})
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core)
 

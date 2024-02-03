@@ -6,7 +6,7 @@
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    move(QGuiApplication::screens().at(0)->geometry().center() - frameGeometry().center());
+
     setAcceptDrops(true);
 }
 
@@ -37,6 +37,7 @@ void MainWindow::dropEvent(QDropEvent *e) {
 }
 
 
+
 void MainWindow::processPcapFile(const int i, const std::string &pcapFile,
                                  PcapReader &PR,
                                  SnortRunner &SR) {
@@ -50,7 +51,9 @@ void MainWindow::processPcapFile(const int i, const std::string &pcapFile,
 }
 
 
-void MainWindow::on_submitBtn_clicked() {
+
+void MainWindow::on_SubmitBtn_clicked()
+{
     unsigned int fileCount = pcapVector.size();
     if (!fileCount) {
         QMessageBox::about(this, "WARNING", "No file detected");

@@ -63,37 +63,38 @@ void PcapReader::readPcapFile(const string &pcapFile, vector<CustomPacket *> &av
                         payload = (char *) (packet + SIZE_ETH + SIZE_IPV4 + SIZE_TCP);
                         payloadLen = ntohs(ipv4->ip_len) - ipv4->ip_hl * 4 - SIZE_TCP;
                         cp->processTCP(tcp_hdr);
-                        if (payloadLen > 0) {
-                            for (int i = 0; i < payloadLen; ++i) {
-                                hexStream << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(payload[i]);
-                                if (i < payloadLen - 1) {
-                                    hexStream << " "; // Optional: Add a space between bytes
-                                }
-                            }
-                            cp->setData(hexStream.str());
-                            hexStream.clear();
-                        }
+//                        if (payloadLen > 0) {
+//                            for (int i = 0; i < payloadLen; ++i) {
+//                                hexStream << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(payload[i]);
+//                                if (i < payloadLen - 1) {
+//                                    hexStream << " "; // Optional: Add a space between bytes
+//                                }
+//                            }
+//                            cp->setData(hexStream.str());
+//                            hexStream.clear();
+//                        }
                         break;
                     case IPPROTO_UDP:
                         udp_hdr = (struct udphdr *) (packet + SIZE_ETH + SIZE_IPV4);
                         payload = (char *) (packet + SIZE_ETH + SIZE_IPV4 + SIZE_UDP);
                         payloadLen = ntohs(ipv4->ip_len) - ipv4->ip_hl * 4 - SIZE_UDP;
                         cp->processUDP(udp_hdr);
-                        if (payloadLen > 0) {
-                            for (int i = 0; i < payloadLen; ++i) {
-                                hexStream << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(payload[i]);
-                                if (i < payloadLen - 1) {
-                                    hexStream << " "; // Optional: Add a space between bytes
-                                }
-                            }
-                            cp->setData(hexStream.str());
-                            hexStream.clear();
-                        }
+//                        if (payloadLen > 0) {
+//                            for (int i = 0; i < payloadLen; ++i) {
+//                                hexStream << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(payload[i]);
+//                                if (i < payloadLen - 1) {
+//                                    hexStream << " "; // Optional: Add a space between bytes
+//                                }
+//                            }
+//                            cp->setData(hexStream.str());
+//                            hexStream.clear();
+//                        }
                         break;
                     default:
                         cout << "Shouldn't be here" << endl;
                         break;
                 }
+                break;
             case (uint16_t)ETHERTYPE_IPV6:
                 ipv6 = (struct ip6_hdr *) (packet + sizeof(struct ether_header));
                 cp->processIP(ipv6, "ipv6");
@@ -131,7 +132,7 @@ void PcapReader::readPcapFile(const string &pcapFile, vector<CustomPacket *> &av
 //                    printf("    Payload (%d bytes):\n", payload_size);
 //                    cp->printPayload(reinterpret_cast<const u_char *>(payload), payload_size);
 //                }
-
+//
 //                payload_size = cp->getIpv4Hdr()->ip_len - cp->getIpv4Hdr()->ip_hl * 4 - sizeof(struct udphdr);
 //                if (payload_size > 0) {
 //                    printf("    Payload (%d bytes):\n", payload_size);

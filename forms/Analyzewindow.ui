@@ -53,12 +53,17 @@
      </column>
      <column>
       <property name="text">
-       <string>Info</string>
+       <string>Length</string>
       </property>
      </column>
      <column>
       <property name="text">
        <string>Warning</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Data</string>
       </property>
      </column>
     </widget>

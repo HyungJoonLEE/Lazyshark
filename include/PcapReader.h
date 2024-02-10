@@ -15,6 +15,11 @@
 #include "CustomPacket.h"
 
 
+#define SIZE_ETH sizeof(struct ether_header)
+#define SIZE_IPV4 sizeof(struct ip)
+#define SIZE_IPV6 sizeof(struct ip6_hdr)
+#define SIZE_TCP sizeof(struct tcphdr)
+#define SIZE_UDP sizeof(struct udphdr)
 
 extern "C"
 {
@@ -32,7 +37,7 @@ public:
     void close();
 
     void readPcapFile(const string &pcapFile, vector<CustomPacket *> &pv);
-    bool readNextPacket();
+    static string formatTime(const struct pcap_pkthdr& header);
 
     static PcapReader& getInstance() {
         static PcapReader pcapReader;
@@ -40,8 +45,6 @@ public:
     }
 
 private:
-    static void packetHandler(u_char *userData, const struct pcap_pkthdr *pkthdr, const u_char *packet);
-
     string filename;
     pcap_t *descr;
     vector<CustomPacket*> _pv;

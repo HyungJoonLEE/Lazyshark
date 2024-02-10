@@ -32,7 +32,7 @@ void AnalyzeWindow::fillTable() {
     ui->tableWidget->setRowCount(rowCount);
     for (int i = 0; i < rowCount; i++) {
         ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(_rv[i]->getNo())));
-        ui->tableWidget->setItem(i, 1, new QTableWidgetItem(QString("TEST TIME")));
+        ui->tableWidget->setItem(i, 1, new QTableWidgetItem(QString(_rv[i]->getTime().c_str())));
         ui->tableWidget->setItem(i, 2, new QTableWidgetItem(QString::number(_rv[i]->getIpv4Hdr()->ip_p)));
         // Convert 'in_addr' to a C string
         const char* ipSrc = inet_ntoa(_rv[i]->getIpv4Hdr()->ip_src);

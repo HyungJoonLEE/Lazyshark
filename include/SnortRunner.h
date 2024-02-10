@@ -6,6 +6,7 @@
 #include <memory>
 #include <iostream>
 
+using namespace std;
 
 class SnortRunner {
 public:
@@ -14,8 +15,8 @@ public:
     ~SnortRunner();
     SnortRunner& operator= (const SnortRunner& ref) {}
 
-    void generateSnortLog(const std::string &pcapFile) const;
-    static std::string extractFilename(const std::string &filepath);
+    void generateSnortLog(const string &pcapFile) const;
+    static string extractFilename(const string &filepath);
 
     static SnortRunner& getInstance() {
         static SnortRunner snortRunner;

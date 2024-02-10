@@ -22,7 +22,7 @@ bool PcapReader::open(const string &pcapFile) {
 }
 
 
-void PcapReader::readPcapFile(const std::string &pcapFile, vector<CustomPacket *> &av) {
+void PcapReader::readPcapFile(const string &pcapFile, vector<CustomPacket *> &av) {
     const u_char *packet;
     struct pcap_pkthdr header;
     struct ether_header *eth_header;
@@ -33,7 +33,7 @@ void PcapReader::readPcapFile(const std::string &pcapFile, vector<CustomPacket *
     unsigned int packetCount = 0;
     unsigned int payload_size = 0;
 
-
+    av.reserve(10000);
 
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t *handle = pcap_open_offline(pcapFile.c_str(), errbuf);
@@ -42,7 +42,20 @@ void PcapReader::readPcapFile(const std::string &pcapFile, vector<CustomPacket *
         auto* cp = new CustomPacket();
         packetCount++;
 
+        std::stringstream ss;
+        char timestamp[64] = {0};
+        time_t timeSec = header.ts.tv_sec;
+        struct tm *timeInfo = localtime(&timeSec);
+        strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", timeInfo);
+        ss << timestamp << "." << std::setfill('0') << std::setw(6) << header.ts.tv_usec;
+
         cp->setNo(packetCount);
+        cp->setLen(header.len);
+        cp->setTime(ss.str());
+        ss.clear();
+
+
+
         eth_header = (struct ether_header *) packet;
         cp->setEthHdr(eth_header);
 

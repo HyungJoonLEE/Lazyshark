@@ -21,6 +21,8 @@ enum class Color { RED, ORANGE, YELLOW, WHITE };
 class CustomPacket {
 public:
     void setNo(unsigned int packetCount);
+    void setTime(const string &time);
+    void setLen(unsigned int plen);
     void setEthHdr(const struct ether_header* hdr);
     void setIpv4Hdr(const struct ip* hdr);
     void setIpv6Hdr(const struct ip6_hdr* hdr);
@@ -30,8 +32,9 @@ public:
     void printPayload(const u_char *payload, size_t len);
     void print_hex_ascii_line (const u_char *payload, int len, int offset);
 
-    std::string formatTimestamp(long long timestamp, long long microseconds);
     unsigned int getNo() const;
+    unsigned int getLen() const;
+    string getTime() const;
     struct ether_header* getEthHdr() const;
     struct ip* getIpv4Hdr() const;
     struct ip6_hdr* getIpv6Hdr() const;
@@ -41,16 +44,17 @@ public:
     ~CustomPacket();
 
 private:
-    unsigned int* m_no;
-    char* m_time;
-    struct ether_header* m_ether;
-    struct ip* m_ipv4;
-    struct ip6_hdr* m_ipv6;
-    struct tcphdr* m_tcp;
-    struct udphdr* m_udp;
-    char* m_data;
-    char* m_warning;
-    Color* m_color;
+    unsigned int* no_;
+    string time_;
+    unsigned int* len_;
+    struct ether_header* eth_;
+    struct ip* ipv4_;
+    struct ip6_hdr* ipv6_;
+    struct tcphdr* tcp_;
+    struct udphdr* udp_;
+    char* data_;
+    char* warning_;
+    Color* color_;
 
     template <typename T>
     void allocateAndCopy(T** dest, const T* src, size_t size) {
@@ -58,7 +62,7 @@ private:
             delete *dest;
         }
         *dest = new T;
-        std::memcpy(*dest, src, size);
+        memcpy(*dest, src, size);
     }
 };
 

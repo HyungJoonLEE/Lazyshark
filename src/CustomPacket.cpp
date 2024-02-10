@@ -2,77 +2,72 @@
 
 
 CustomPacket::~CustomPacket() {
-    if (!m_no)      delete m_no;
-    if (!m_ether)   delete m_ether;
-    if (!m_ipv4)    delete m_ipv4;
-    if (!m_ipv6)    delete m_ipv6;
-    if (!m_tcp)     delete m_tcp;
-    if (!m_udp)     delete m_udp;
-    if (!m_data)    delete m_data;
-    if (!m_warning) delete m_warning;
-    if (!m_color)   delete m_color;
+    if (!no_)           delete no_;
+    if (!eth_)          delete eth_;
+    if (!ipv4_)         delete ipv4_;
+    if (!ipv6_)         delete ipv6_;
+    if (!tcp_)          delete tcp_;
+    if (!udp_)          delete udp_;
+    if (!data_)         delete data_;
+    if (!warning_)      delete warning_;
+    if (!color_)        delete color_;
 }
 
-struct ether_header *CustomPacket::getEthHdr() const { return m_ether; }
-struct ip *CustomPacket::getIpv4Hdr() const { return m_ipv4; }
-struct ip6_hdr *CustomPacket::getIpv6Hdr() const { return m_ipv6; }
-struct tcphdr *CustomPacket::getTCPHdr() const { return m_tcp; }
-struct udphdr *CustomPacket::getUDPHdr() const { return m_udp; }
-unsigned int CustomPacket::getNo() const { return *m_no; }
+
+unsigned int CustomPacket::getNo() const { return *no_; }
+unsigned int CustomPacket::getLen() const { return *len_; }
+string CustomPacket::getTime() const { return time_; }
+struct ether_header *CustomPacket::getEthHdr() const { return eth_; }
+struct ip *CustomPacket::getIpv4Hdr() const { return ipv4_; }
+struct ip6_hdr *CustomPacket::getIpv6Hdr() const { return ipv6_; }
+struct tcphdr *CustomPacket::getTCPHdr() const { return tcp_; }
+struct udphdr *CustomPacket::getUDPHdr() const { return udp_; }
 
 
 void CustomPacket::setNo(const unsigned int packetCount) {
-    m_no = new unsigned int;
-    *m_no = packetCount;
+    no_ = new unsigned int;
+    *no_ = packetCount;
+}
+
+
+void CustomPacket::setTime(const string& time) {
+    time_ = time;
+}
+
+
+void CustomPacket::setLen(const unsigned int len) {
+    len_ = new unsigned int;
+    *len_ = len;
 }
 
 
 void CustomPacket::setEthHdr(const struct ether_header *hdr) {
-    allocateAndCopy(&m_ether, hdr, sizeof(struct ether_header));
+    allocateAndCopy(&eth_, hdr, sizeof(struct ether_header));
 }
 
 
 void CustomPacket::setIpv4Hdr(const struct ip *hdr) {
-    allocateAndCopy(&m_ipv4, hdr, sizeof(struct ip));
+    allocateAndCopy(&ipv4_, hdr, sizeof(struct ip));
 }
 
 
 void CustomPacket::setIpv6Hdr(const struct ip6_hdr *hdr) {
-    allocateAndCopy(&m_ipv6, hdr, sizeof(struct ip6_hdr));
+    allocateAndCopy(&ipv6_, hdr, sizeof(struct ip6_hdr));
 }
 
 
 void CustomPacket::setTCPHdr(const struct tcphdr *hdr) {
-    allocateAndCopy(&m_tcp, hdr, sizeof(struct tcphdr));
+    allocateAndCopy(&tcp_, hdr, sizeof(struct tcphdr));
 }
 
 
 void CustomPacket::setUDPHdr(const struct udphdr *hdr) {
-    allocateAndCopy(&m_udp, hdr, sizeof(struct udphdr));
+    allocateAndCopy(&udp_, hdr, sizeof(struct udphdr));
 }
 
 
 void CustomPacket::setData(const char *data) {
-    allocateAndCopy(&m_data, data, sizeof(struct tcphdr));
-}
-
-
-string CustomPacket::formatTimestamp(long long int timestamp, long long int microseconds) {
-    // Convert the timestamp to system time
-    chrono::system_clock::time_point tp = chrono::system_clock::from_time_t(timestamp);
-
-    // Convert to time_t for breaking down into components
-    time_t rawTime = chrono::system_clock::to_time_t(tp);
-    tm* timeInfo = localtime(&rawTime);
-
-    // Use stringstream for formatting
-    stringstream ss;
-    ss << put_time(timeInfo, "%m/%d-%H:%M:%S");
-
-    // Append microseconds
-    ss << "." << setfill('0') << setw(6) << microseconds;
-
-    return ss.str();
+    allocateAndCopy(&data_, data, sizeof(struct tcphdr));
 }
 
 
@@ -167,6 +162,9 @@ void CustomPacket::print_hex_ascii_line(const u_char *payload, int len, int offs
     printf("\n");
     sprintf(temp + strlen(temp), "\n");
 }
+
+
+
 
 
 

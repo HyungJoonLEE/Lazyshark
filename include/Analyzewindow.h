@@ -22,10 +22,11 @@ public:
     explicit AnalyzeWindow(QWidget *parent = nullptr);
     ~AnalyzeWindow();
     void fillTable();
+    vector<CustomPacket*>& getRv();
 private:
     Ui::AnalyzeWindow *ui;
     QVector<QString> pcapFiles;
-    vector<CustomPacket*> m_av;
+    vector<CustomPacket *> _rv;
 };
 
 #endif // ANALYZEWINDOW_H

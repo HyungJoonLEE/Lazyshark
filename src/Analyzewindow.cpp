@@ -3,9 +3,9 @@
 #include "PcapReader.h"
 
 
-    AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
-    QDialog(parent), ui(new Ui::AnalyzeWindow)
-{
+AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
+    QDialog(parent), ui(new Ui::AnalyzeWindow) {
+
     ui->setupUi(this);
 
     // set table
@@ -28,22 +28,26 @@ AnalyzeWindow::~AnalyzeWindow() {
 
 
 void AnalyzeWindow::fillTable() {
-    size_t rowCount = m_av.size();
+    size_t rowCount = _rv.size();
     ui->tableWidget->setRowCount(rowCount);
     for (int i = 0; i < rowCount; i++) {
-        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(m_av[i]->getNo())));
+        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(_rv[i]->getNo())));
         ui->tableWidget->setItem(i, 1, new QTableWidgetItem(QString("TEST TIME")));
-        ui->tableWidget->setItem(i, 2, new QTableWidgetItem(QString::number(m_av[i]->getIpv4Hdr()->ip_p)));
+        ui->tableWidget->setItem(i, 2, new QTableWidgetItem(QString::number(_rv[i]->getIpv4Hdr()->ip_p)));
         // Convert 'in_addr' to a C string
-        const char* ipSrc = inet_ntoa(m_av[i]->getIpv4Hdr()->ip_src);
-        const char* ipDst = inet_ntoa(m_av[i]->getIpv4Hdr()->ip_dst);
+        const char* ipSrc = inet_ntoa(_rv[i]->getIpv4Hdr()->ip_src);
+        const char* ipDst = inet_ntoa(_rv[i]->getIpv4Hdr()->ip_dst);
         ui->tableWidget->setItem(i, 3, new QTableWidgetItem(QString::fromLatin1(ipSrc)));
-        ui->tableWidget->setItem(i, 4, new QTableWidgetItem(QString::number(m_av[i]->getTCPHdr()->th_sport)));
-        ui->tableWidget->setItem(i, 5, new QTableWidgetItem(QString::number(m_av[i]->getTCPHdr()->th_dport)));
+        ui->tableWidget->setItem(i, 4, new QTableWidgetItem(QString::number(_rv[i]->getTCPHdr()->th_sport)));
+        ui->tableWidget->setItem(i, 5, new QTableWidgetItem(QString::number(_rv[i]->getTCPHdr()->th_dport)));
         ui->tableWidget->setItem(i, 6, new QTableWidgetItem(QString::fromLatin1(ipDst)));
-        unsigned int plen = m_av[i]->getIpv4Hdr()->ip_len - m_av[i]->getIpv4Hdr()->ip_hl - m_av[i]->getTCPHdr()->doff * 4;
+        unsigned int plen = _rv[i]->getIpv4Hdr()->ip_len - _rv[i]->getIpv4Hdr()->ip_hl - _rv[i]->getTCPHdr()->doff * 4;
         ui->tableWidget->setItem(i, 7, new QTableWidgetItem(QString::number(plen)));
         ui->tableWidget->setItem(i, 8, new QTableWidgetItem(QString("TEST HELLO")));
     }
+}
+
+vector<CustomPacket *>& AnalyzeWindow::getRv() {
+    return _rv;
 }
 

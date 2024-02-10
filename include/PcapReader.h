@@ -31,7 +31,7 @@ public:
     bool open(const string &pcapFile);
     void close();
 
-    void readPcap(const string &pcapFile);
+    void readPcapFile(const string &pcapFile, vector<CustomPacket *> &pv);
     bool readNextPacket();
 
     static PcapReader& getInstance() {
@@ -44,7 +44,7 @@ private:
 
     string filename;
     pcap_t *descr;
-    vector<CustomPacket*> packetVector;
+    vector<CustomPacket*> _pv;
 };
 
 #endif //LAZYSHARK_PCAPREADER_H

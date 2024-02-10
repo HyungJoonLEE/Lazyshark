@@ -34,8 +34,9 @@ public:
 
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
-    void processPcapFile(const int i, const std::string &pcapFile,
-                         PcapReader& PR, SnortRunner& SR);
+    void processPcapFile(const string &pcapFile,
+                         PcapReader &PR, SnortRunner &SR,
+                         vector<CustomPacket *> &pv);
 
 private slots:
     void on_SubmitBtn_clicked();

@@ -31,19 +31,21 @@ void MainWindow::dropEvent(QDropEvent *e) {
             qDebug() << "Dropped file:" << fileName;
             pcapVector.push_back(fileName);
         } else {
-            QMessageBox::about(this, "WARNING", "Check extension is \'.pcap\'");
+            QMessageBox::about(this,
+                               "WARNING",
+                               "Check extension is \'.pcap\'");
         }
     }
 }
 
 
-
-void MainWindow::processPcapFile(const int i, const string &pcapFile,
+void MainWindow::processPcapFile(const string &pcapFile,
                                  PcapReader &PR,
-                                 SnortRunner &SR) {
+                                 SnortRunner &SR,
+                                 vector<CustomPacket *>& av) {
     SR.generateSnortLog(pcapFile);
     if (PR.open(pcapFile))
-        PR.readPcap(pcapFile);
+        PR.readPcapFile(pcapFile, av);
     else
         QMessageBox::warning(this,
                              "Error",
@@ -51,23 +53,24 @@ void MainWindow::processPcapFile(const int i, const string &pcapFile,
 }
 
 
-
-void MainWindow::on_SubmitBtn_clicked()
-{
+void MainWindow::on_SubmitBtn_clicked() {
     unsigned int fileCount = pcapVector.size();
-    if (!fileCount) {
-        QMessageBox::about(this, "WARNING", "No file detected");
-    } else {
-        AnalyzeWindow analyzeWindow[fileCount];
-        auto &pcapReader = reinterpret_cast<PcapReader &>(PcapReader::getInstance());
-        auto &snortRunner = reinterpret_cast<SnortRunner &>(SnortRunner::getInstance());
+
+    if (!fileCount)
+        QMessageBox::about(this,
+                           "WARNING",
+                           "No file detected");
+    else {
+        AnalyzeWindow AW[fileCount];
+        auto &PR = reinterpret_cast<PcapReader &>(PcapReader::getInstance());
+        auto &SR = reinterpret_cast<SnortRunner &>(SnortRunner::getInstance());
 
         for (int i = 0; i < fileCount; i++) {
             const string pcapFile = pcapVector[i].toUtf8().constData();
-            processPcapFile(i, pcapFile, pcapReader, snortRunner);
-            analyzeWindow[i].setModal(true);
-            analyzeWindow[i].fillTable();
-            analyzeWindow[i].exec();
+            processPcapFile(pcapFile, PR, SR, AW[i].getRv());
+            AW[i].setModal(true);
+            AW[i].fillTable();
+            AW[i].exec();
         }
     }
 }

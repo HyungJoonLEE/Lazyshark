@@ -7,6 +7,7 @@ AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
     QDialog(parent), ui(new Ui::AnalyzeWindow) {
 
     ui->setupUi(this);
+    ui->tableWidget->verticalHeader()->setVisible(false);
 
     // set table
     ui->tableWidget->setColumnWidth(0, 100);     // NO

@@ -69,6 +69,7 @@ void MainWindow::on_SubmitBtn_clicked() {
             const string pcapFile = pcapVector[i].toUtf8().constData();
             processPcapFile(pcapFile, PR, SR, AW[i].getRv());
             AW[i].setModal(true);
+            AW[i].showMaximized();
             AW[i].fillTable();
             AW[i].exec();
         }

@@ -36,8 +36,11 @@ public:
     bool open(const string &pcapFile);
     void close();
 
-    void readPcapFile(const string &pcapFile, vector<CustomPacket *> &pv);
+    void readPcapFile(const string &pcapFile,
+                      vector<CustomPacket *> &pv,
+                      const unordered_map<string, tuple<int, string>> &logMap);
     static string formatTime(const struct pcap_pkthdr& header);
+    static string removeYear(const pcap_pkthdr &header);
 
     static PcapReader& getInstance() {
         static PcapReader pcapReader;

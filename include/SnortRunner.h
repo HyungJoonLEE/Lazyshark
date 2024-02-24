@@ -5,6 +5,11 @@
 #include <cstdlib>
 #include <memory>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <unordered_map>
+#include <regex>
+#include <tuple>
 
 using namespace std;
 
@@ -16,6 +21,9 @@ public:
     SnortRunner& operator= (const SnortRunner& ref) {}
 
     void generateSnortLog(const string &pcapFile) const;
+    void processLog(const string& pcapFile);
+    unordered_map<string, tuple<int, string>> getLogMap() const;
+
     static string extractFilename(const string &filepath);
 
     static SnortRunner& getInstance() {
@@ -24,6 +32,6 @@ public:
     }
 
 private:
-
+    unordered_map<string, tuple<int, string>> logMap_;
 };
 #endif //LAZYSHARK_SNORTRUNNER_H

@@ -44,8 +44,9 @@ void MainWindow::processPcapFile(const string &pcapFile,
                                  SnortRunner &SR,
                                  vector<CustomPacket *>& av) {
     SR.generateSnortLog(pcapFile);
+    SR.processLog(pcapFile);
     if (PR.open(pcapFile))
-        PR.readPcapFile(pcapFile, av);
+        PR.readPcapFile(pcapFile, av, SR.getLogMap());
     else
         QMessageBox::warning(this,
                              "Error",
@@ -62,6 +63,7 @@ void MainWindow::on_SubmitBtn_clicked() {
                            "No file detected");
     else {
         AnalyzeWindow AW[fileCount];
+        populatePortMap();
         auto &PR = reinterpret_cast<PcapReader &>(PcapReader::getInstance());
         auto &SR = reinterpret_cast<SnortRunner &>(SnortRunner::getInstance());
 

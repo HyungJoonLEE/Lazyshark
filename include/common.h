@@ -20,5 +20,11 @@
 
 using namespace std;
 
+extern unordered_map<int, string> portMap;
+
+void populatePortMap();
+
+
+
 
 #endif //LAZYSHARK_COMMON_H

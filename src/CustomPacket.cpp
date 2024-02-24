@@ -1,8 +1,10 @@
 #include "CustomPacket.h"
 
 
-CustomPacket::~CustomPacket() {
+unordered_map<int, string> portMap;
 
+CustomPacket::~CustomPacket() {
+    data_.reserve(350);
 }
 
 
@@ -14,6 +16,7 @@ string CustomPacket::getSIP() const { return source_; }
 string CustomPacket::getDIP() const { return dest_; }
 uint16_t CustomPacket::getSPort() const { return sport_; }
 uint16_t CustomPacket::getDPort() const { return dport_; }
+string CustomPacket::getWarning() const { return warning_; }
 string CustomPacket::getData() const { return data_; }
 
 
@@ -56,31 +59,27 @@ void CustomPacket::processIP(const void *hdr, const string &type) {
 void CustomPacket::processTCP(const struct tcphdr *hdr) {
     sport_ = ntohs(hdr->source);
     dport_ = ntohs(hdr->dest);
-    switch (sport_) {
-        case 20:
-            protocol_ = "FTP";
-            break;
-        case 22:
-            protocol_ = "SSH";
-            break;
-        case 23:
-            protocol_ = "TELNET";
-            break;
-        case 25:
-            protocol_ = "SMTP";
-            break;
-        case 443:
-            protocol_ = "HTTPS";
-            break;
-        default:
-            protocol_ = "TCP";
-            break;
-    }
+    protocol_ = portMap[sport_];
+    if (protocol_.empty()) protocol_ = "TCP";
 }
 
 
 void CustomPacket::processUDP(const struct udphdr *hdr) {
     sport_ = ntohs(hdr->source);
     dport_ = ntohs(hdr->dest);
+    protocol_ = portMap[sport_];
+    if (protocol_.empty()) protocol_ = "UDP";
+}
+
+
+void CustomPacket::setWarning(const string &logTime, const unordered_map<string, tuple<int, string>> &logMap) {
+    cout << logTime << endl;
+    auto it = logMap.find(logTime);
+    if (it != logMap.end()) {
+        // Access the tuple
+        auto& [priority, classification] = it->second;
+        priority_ = priority;
+        warning_ = classification;
+    }
 }
 

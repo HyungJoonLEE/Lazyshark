@@ -22,7 +22,9 @@ bool PcapReader::open(const string &pcapFile) {
 }
 
 
-void PcapReader::readPcapFile(const string &pcapFile, vector<CustomPacket *> &av) {
+void PcapReader::readPcapFile(const string &pcapFile,
+                              vector<CustomPacket *> &av,
+                              const unordered_map<string, tuple<int, string>> &logMap) {
     const u_char *packet;
     struct pcap_pkthdr header;
     struct ether_header *eth_hdr;
@@ -45,10 +47,14 @@ void PcapReader::readPcapFile(const string &pcapFile, vector<CustomPacket *> &av
         auto *cp = new CustomPacket;
         packetCount++;
 
+        string time = formatTime(header);
+        string logTime = removeYear(header);
 
         cp->setNo(packetCount);
         cp->setLen(header.len);
-        cp->setTime(formatTime(header));
+        cp->setTime(time);
+        cout << logTime << endl;
+        cp->setWarning(logTime, logMap);
 
 
         eth_hdr = (struct ether_header *) packet;
@@ -65,7 +71,7 @@ void PcapReader::readPcapFile(const string &pcapFile, vector<CustomPacket *> &av
                         cp->processTCP(tcp_hdr);
 //                        if (payloadLen > 0) {
 //                            for (int i = 0; i < payloadLen; ++i) {
-//                                hexStream << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(payload[i]);
+//                                hexStream << hex << setw(2) << setfill('0') << static_cast<int>(payload[i]);
 //                                if (i < payloadLen - 1) {
 //                                    hexStream << " "; // Optional: Add a space between bytes
 //                                }
@@ -81,7 +87,7 @@ void PcapReader::readPcapFile(const string &pcapFile, vector<CustomPacket *> &av
                         cp->processUDP(udp_hdr);
 //                        if (payloadLen > 0) {
 //                            for (int i = 0; i < payloadLen; ++i) {
-//                                hexStream << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(payload[i]);
+//                                hexStream << hex << setw(2) << setfill('0') << static_cast<int>(payload[i]);
 //                                if (i < payloadLen - 1) {
 //                                    hexStream << " "; // Optional: Add a space between bytes
 //                                }
@@ -90,8 +96,11 @@ void PcapReader::readPcapFile(const string &pcapFile, vector<CustomPacket *> &av
 //                            hexStream.clear();
 //                        }
                         break;
+                    case IPPROTO_ICMP:
+                        // TODO: implement ICMP
+                        break;
                     default:
-                        cout << "Shouldn't be here" << endl;
+                        cout << "Shouldn't be here: " << ipv4->ip_p << endl;
                         break;
                 }
                 break;
@@ -156,7 +165,18 @@ string PcapReader::formatTime(const pcap_pkthdr &header) {
     time_t timeSec = header.ts.tv_sec;
     struct tm *timeInfo = localtime(&timeSec);
     strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", timeInfo);
-    ss << timestamp << "." << std::setfill('0') << std::setw(6) << header.ts.tv_usec;
+    ss << timestamp << "." << setfill('0') << setw(6) << header.ts.tv_usec;
     return ss.str();
 }
 
+
+string PcapReader::removeYear(const pcap_pkthdr &header) {
+    stringstream ss;
+    char timestamp[64] = {0};
+    time_t timeSec = header.ts.tv_sec - 3600;
+//    time_t timeSec = header.ts.tv_sec;
+    struct tm *timeInfo = localtime(&timeSec);
+    strftime(timestamp, sizeof(timestamp), "%m/%d-%H:%M:%S", timeInfo);
+    ss << timestamp << "." << setfill('0') << setw(6) << header.ts.tv_usec;
+    return ss.str();
+}

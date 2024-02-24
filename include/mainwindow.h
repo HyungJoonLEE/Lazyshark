@@ -18,6 +18,7 @@
 #include <cstdlib>
 #include "PcapReader.h"
 #include "SnortRunner.h"
+#include "common.h"
 
 
 QT_BEGIN_NAMESPACE

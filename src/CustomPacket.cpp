@@ -18,6 +18,7 @@ uint16_t CustomPacket::getSPort() const { return sport_; }
 uint16_t CustomPacket::getDPort() const { return dport_; }
 string CustomPacket::getWarning() const { return warning_; }
 string CustomPacket::getData() const { return data_; }
+int CustomPacket::getPriority() const { return priority_; }
 
 
 void CustomPacket::setNo(const unsigned int packetCount) {

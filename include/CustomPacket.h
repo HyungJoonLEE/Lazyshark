@@ -69,6 +69,8 @@ public:
     uint16_t getDPort() const;
     string getWarning() const;
     string getData() const;
+    int getPriority() const;
+
 
 
 

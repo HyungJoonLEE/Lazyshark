@@ -8,6 +8,7 @@ AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
 
     ui->setupUi(this);
     ui->tableWidget->verticalHeader()->setVisible(false);
+    initPriorityMap();
 
     // set table
     ui->tableWidget->setColumnWidth(0, 60);     // NO
@@ -42,10 +43,24 @@ void AnalyzeWindow::fillTable() {
         ui->tableWidget->setItem(i, 7, new QTableWidgetItem(QString::number(_rv[i]->getLen())));
         ui->tableWidget->setItem(i, 8, new QTableWidgetItem(QString::fromStdString(_rv[i]->getWarning())));
         ui->tableWidget->setItem(i, 9, new QTableWidgetItem(QString::fromStdString(_rv[i]->getData())));
+        if (!_rv[i]->getWarning().empty()) {
+            QColor color(priorityMap_[_rv[i]->getPriority()].c_str());
+            for (int j = 0; j < 10; j++) {
+                ui->tableWidget->item(i, j)->setBackground(color);
+            }
+        }
     }
 }
 
 vector<CustomPacket *>& AnalyzeWindow::getRv() {
     return _rv;
+}
+
+
+void AnalyzeWindow::initPriorityMap() {
+    priorityMap_[1] = "#FF0000";    // red
+    priorityMap_[2] = "#FFD700";    // yellow
+    priorityMap_[3] = "#ADFF2F";    // green-yellow
+    priorityMap_[4] = "#98FB98";    // light-green
 }
 

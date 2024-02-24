@@ -57,6 +57,7 @@ public:
     void processIP(const void* hdr, const string &type);
     void processTCP(const struct tcphdr* hdr);
     void processUDP(const struct udphdr* hdr);
+    void processICMP(const struct icmphdr *hdr);
 
 
     unsigned int getNo() const;

@@ -11,6 +11,7 @@
 #include <netinet/ip.h>        // For struct ip
 #include <netinet/tcp.h>       // For struct tcphdr
 #include <netinet/udp.h>
+#include <netinet/ip_icmp.h>
 #include <vector>
 #include "CustomPacket.h"
 

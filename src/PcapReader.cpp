@@ -32,6 +32,7 @@ void PcapReader::readPcapFile(const string &pcapFile,
     struct ip6_hdr *ipv6;
     struct tcphdr *tcp_hdr;
     struct udphdr *udp_hdr;
+    struct icmphdr *icmp_hdr;
     const char *payload;
     unsigned int packetCount = 0;
     unsigned int payloadLen = 0;
@@ -53,7 +54,6 @@ void PcapReader::readPcapFile(const string &pcapFile,
         cp->setNo(packetCount);
         cp->setLen(header.len);
         cp->setTime(time);
-        cout << logTime << endl;
         cp->setWarning(logTime, logMap);
 
 
@@ -97,6 +97,8 @@ void PcapReader::readPcapFile(const string &pcapFile,
 //                        }
                         break;
                     case IPPROTO_ICMP:
+                        icmp_hdr = (struct icmphdr *) (packet + SIZE_ETH + SIZE_IPV4);
+                        cp->processICMP(icmp_hdr);
                         // TODO: implement ICMP
                         break;
                     default:

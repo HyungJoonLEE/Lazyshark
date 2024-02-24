@@ -16,6 +16,18 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QTableWidget" name="tableWidget">
+     <property name="styleSheet">
+      <string notr="true">QTableWidget { 
+	background-color: white;
+	color: black;
+ }
+
+QTableWidget::item { 
+	color: black;
+ }
+
+QTableWidget::item:selected { background-color: lightblue; }</string>
+     </property>
      <column>
       <property name="text">
        <string>No.</string>

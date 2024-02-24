@@ -43,11 +43,20 @@ void AnalyzeWindow::fillTable() {
         ui->tableWidget->setItem(i, 7, new QTableWidgetItem(QString::number(_rv[i]->getLen())));
         ui->tableWidget->setItem(i, 8, new QTableWidgetItem(QString::fromStdString(_rv[i]->getWarning())));
         ui->tableWidget->setItem(i, 9, new QTableWidgetItem(QString::fromStdString(_rv[i]->getData())));
+        ui->tableWidget->item(i, 0)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 1)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 2)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 3)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 4)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 5)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 6)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 7)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 8)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 9)->setTextAlignment(Qt::AlignCenter);
         if (!_rv[i]->getWarning().empty()) {
             QColor color(priorityMap_[_rv[i]->getPriority()].c_str());
             for (int j = 0; j < 10; j++) {
-                ui->tableWidget->item(i, j)->setBackground(color);
-            }
+                ui->tableWidget->item(i, j)->setBackground(color);}
         }
     }
 }

@@ -73,6 +73,12 @@ void CustomPacket::processUDP(const struct udphdr *hdr) {
 }
 
 
+void CustomPacket::processICMP(const struct icmphdr *hdr) {
+    if (protocol_.empty()) protocol_ = "ICMP";
+    // TODO: Need to figure out handling port
+}
+
+
 void CustomPacket::setWarning(const string &logTime, const unordered_map<string, tuple<int, string>> &logMap) {
     cout << logTime << endl;
     auto it = logMap.find(logTime);

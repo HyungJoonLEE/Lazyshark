@@ -2,7 +2,7 @@
 
 
 PcapReader::PcapReader() :  descr(nullptr) {
-//    _pv.reserve(10000);
+    _pv.reserve(10000);
 }
 
 
@@ -49,7 +49,7 @@ void PcapReader::readPcapFile(const string &pcapFile,
         packetCount++;
 
         string time = formatTime(header);
-        string logTime = removeYear(header);
+        string logTime = removeYear(time);
 
         cp->setNo(packetCount);
         cp->setLen(header.len);
@@ -165,20 +165,22 @@ string PcapReader::formatTime(const pcap_pkthdr &header) {
     stringstream ss;
     char timestamp[64] = {0};
     time_t timeSec = header.ts.tv_sec;
-    struct tm *timeInfo = localtime(&timeSec);
-    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", timeInfo);
+    struct tm *timeInfo = gmtime(&timeSec);
+    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d-%H:%M:%S", timeInfo);
     ss << timestamp << "." << setfill('0') << setw(6) << header.ts.tv_usec;
     return ss.str();
 }
 
 
-string PcapReader::removeYear(const pcap_pkthdr &header) {
-    stringstream ss;
-    char timestamp[64] = {0};
-    time_t timeSec = header.ts.tv_sec - 3600;
-//    time_t timeSec = header.ts.tv_sec;
-    struct tm *timeInfo = localtime(&timeSec);
-    strftime(timestamp, sizeof(timestamp), "%m/%d-%H:%M:%S", timeInfo);
-    ss << timestamp << "." << setfill('0') << setw(6) << header.ts.tv_usec;
-    return ss.str();
+string PcapReader::removeYear(const string &time) {
+    std::string year = time.substr(0, 4);
+    std::string month = time.substr(5, 2);
+    std::string day = time.substr(8, 2);
+    std::string rest = time.substr(10); // This gets " HH:MM:SS.ffffff"
+
+    // Construct the new timestamp
+    std::stringstream UTC_Time;
+    UTC_Time << month << "/" << day << rest; // "MM/DD-HH:MM:SS.ffffff"
+
+    return UTC_Time.str();
 }

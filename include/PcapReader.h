@@ -41,7 +41,7 @@ public:
                       vector<CustomPacket *> &pv,
                       const unordered_map<string, tuple<int, string>> &logMap);
     static string formatTime(const struct pcap_pkthdr& header);
-    static string removeYear(const pcap_pkthdr &header);
+    static string removeYear(const string &time);
 
     static PcapReader& getInstance() {
         static PcapReader pcapReader;

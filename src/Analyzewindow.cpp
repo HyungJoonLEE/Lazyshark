@@ -11,16 +11,16 @@ AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
     initPriorityMap();
 
     // set table
-    ui->tableWidget->setColumnWidth(0, 60);     // NO
-    ui->tableWidget->setColumnWidth(1, 200);    // TIME
-    ui->tableWidget->setColumnWidth(2, 60);     // PROTOCOL
-    ui->tableWidget->setColumnWidth(3, 150);    // SOURCE
-    ui->tableWidget->setColumnWidth(4, 70);     // S_PORT
-    ui->tableWidget->setColumnWidth(5, 70);     // D_PORT
-    ui->tableWidget->setColumnWidth(6, 150);    // DESTINATION
-    ui->tableWidget->setColumnWidth(7, 60);     // LENGTH
-    ui->tableWidget->setColumnWidth(8, 200);    // WARNING
-    ui->tableWidget->setColumnWidth(9, 700);    // DATA
+    ui->tableWidget->setColumnWidth(0, 90);     // NO
+    ui->tableWidget->setColumnWidth(1, 250);    // TIME
+    ui->tableWidget->setColumnWidth(2, 100);     // PROTOCOL
+    ui->tableWidget->setColumnWidth(3, 200);    // SOURCE
+    ui->tableWidget->setColumnWidth(4, 90);     // S_PORT
+    ui->tableWidget->setColumnWidth(5, 90);     // D_PORT
+    ui->tableWidget->setColumnWidth(6, 200);    // DESTINATION
+    ui->tableWidget->setColumnWidth(7, 80);     // LENGTH
+    ui->tableWidget->setColumnWidth(8, 300);    // WARNING
+//    ui->tableWidget->setColumnWidth(9, 700);    // DATA
 }
 
 
@@ -42,7 +42,7 @@ void AnalyzeWindow::fillTable() {
         ui->tableWidget->setItem(i, 5, new QTableWidgetItem(QString::number(_rv[i]->getDPort())));
         ui->tableWidget->setItem(i, 7, new QTableWidgetItem(QString::number(_rv[i]->getLen())));
         ui->tableWidget->setItem(i, 8, new QTableWidgetItem(QString::fromStdString(_rv[i]->getWarning())));
-        ui->tableWidget->setItem(i, 9, new QTableWidgetItem(QString::fromStdString(_rv[i]->getData())));
+//        ui->tableWidget->setItem(i, 9, new QTableWidgetItem(QString::fromStdString(_rv[i]->getData())));
         ui->tableWidget->item(i, 0)->setTextAlignment(Qt::AlignCenter);
         ui->tableWidget->item(i, 1)->setTextAlignment(Qt::AlignCenter);
         ui->tableWidget->item(i, 2)->setTextAlignment(Qt::AlignCenter);
@@ -52,10 +52,10 @@ void AnalyzeWindow::fillTable() {
         ui->tableWidget->item(i, 6)->setTextAlignment(Qt::AlignCenter);
         ui->tableWidget->item(i, 7)->setTextAlignment(Qt::AlignCenter);
         ui->tableWidget->item(i, 8)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(i, 9)->setTextAlignment(Qt::AlignCenter);
+//        ui->tableWidget->item(i, 9)->setTextAlignment(Qt::AlignCenter);
         if (!_rv[i]->getWarning().empty()) {
             QColor color(priorityMap_[_rv[i]->getPriority()].c_str());
-            for (int j = 0; j < 10; j++) {
+            for (int j = 0; j < 9; j++) {
                 ui->tableWidget->item(i, j)->setBackground(color);}
         }
     }

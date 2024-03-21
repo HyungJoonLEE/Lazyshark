@@ -3,10 +3,6 @@
 
 unordered_map<int, string> portMap;
 
-CustomPacket::~CustomPacket() {
-    data_.reserve(350);
-}
-
 
 unsigned int CustomPacket::getNo() const { return no_; }
 unsigned int CustomPacket::getLen() const { return len_; }
@@ -80,7 +76,6 @@ void CustomPacket::processICMP(const struct icmphdr *hdr) {
 
 
 void CustomPacket::setWarning(const string &logTime, const unordered_map<string, tuple<int, string>> &logMap) {
-    cout << logTime << endl;
     auto it = logMap.find(logTime);
     if (it != logMap.end()) {
         // Access the tuple

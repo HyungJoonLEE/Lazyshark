@@ -56,7 +56,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${SOURCES}
         Resource/img.qrc
         src/common.cpp
-        logs/test.log logs/test2.log luas/balanced.lua luas/connectivity.lua luas/file_magic.rules luas/inline.lua luas/max_detect.lua luas/security.lua luas/sensitive_data.rules luas/snort.lua luas/snort_defaults.lua luas/talos.lua pcaps/test.pcap pcaps/test2.pcap
     )
 else()
     include (GNUInstallDirs)

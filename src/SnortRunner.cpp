@@ -10,12 +10,14 @@ SnortRunner::~SnortRunner() {}
 void SnortRunner::generateSnortLog(const string &pcapFile) const {
     string logName = extractFilename(pcapFile);
     string cmd = "snort -c ./../luas/snort.lua "
+                      "--daq-dir /usr/local/lib/daq "
                       "-R ./../rules/community.rules "
                       "-r '" + pcapFile + "' -q "
                                           "-A alert_fast "
-                                          "-z 4 "
+                                          "-z 4 -U "
                                           ">> ./../logs/"
                                           "'" + logName + "'.log ";
+
     unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "r"), pclose);
     if (!pipe) {
         cerr << "Failed to open pipe\n";

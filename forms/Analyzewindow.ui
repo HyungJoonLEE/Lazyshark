@@ -109,7 +109,7 @@ QTableWidget::item:selected { background-color: lightblue; }</string>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox_2"/>
+         <widget class="QComboBox" name="comboBox"/>
         </item>
         <item>
          <widget class="QLabel" name="label_2">
@@ -117,14 +117,31 @@ QTableWidget::item:selected { background-color: lightblue; }</string>
            <string notr="true">color:black;</string>
           </property>
           <property name="text">
-           <string>Source IP</string>
+           <string>IP</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox"/>
+         <widget class="QComboBox" name="comboBox_2"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Port</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_3"/>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Filter</string>
+        </property>
+       </widget>
       </item>
       <item>
        <spacer name="verticalSpacer">

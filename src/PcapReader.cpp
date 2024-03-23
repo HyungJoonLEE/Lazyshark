@@ -60,6 +60,9 @@ void PcapReader::readPcapFile(const string &pcapFile,
         eth_hdr = (struct ether_header *) packet;
 
         switch (ntohs(eth_hdr->ether_type)) {
+            case ETHERTYPE_ARP:
+                cp->processARP(eth_hdr);
+                break;
             case ETHERTYPE_IP:
                 ipv4 = (struct ip *) (packet + sizeof(struct ether_header));
                 cp->processIP(ipv4, "ipv4");
@@ -99,25 +102,27 @@ void PcapReader::readPcapFile(const string &pcapFile,
             case (uint16_t)ETHERTYPE_IPV6:
                 ipv6 = (struct ip6_hdr *) (packet + sizeof(struct ether_header));
                 cp->processIP(ipv6, "ipv6");
-                // TODO: Different compared to ipv4 (No tcp or udp protocol indicated)
-//                switch (ipv6.) {
-//                    case IPPROTO_TCP:
-//                        tcp_hdr = (struct tcphdr *) (packet + SIZE_ETH + SIZE_IPV6);
-//                        cp->processTCP(tcp_hdr);
-//                        break;
-//                    case IPPROTO_UDP:
-//                        udp_hdr = (struct udphdr *) (packet + SIZE_ETH + SIZE_IPV6);
-//                        cp->processUDP(udp_hdr);
-//                        break;
-//
-//                    default:
-//                        cout << "Shouldn't be here" << endl;
-//                        break;
-//                }
-                break;
-            case ETHERTYPE_ARP:
-                break;
-            default:
+                int next_header = ipv6->ip6_nxt;
+                int offset = SIZE_ETH + SIZE_IPV6;
+
+                switch (next_header) {
+                    case IPPROTO_TCP:
+                        tcp_hdr = (struct tcphdr *)(packet + offset);
+                        cp->processTCP(tcp_hdr);
+                        // Calculate payload length if necessary
+                        break;
+                    case IPPROTO_UDP:
+                        udp_hdr = (struct udphdr *)(packet + offset);
+                        cp->processUDP(udp_hdr);
+                        // Calculate payload length if necessary
+                        break;
+                    case IPPROTO_ICMPV6:
+                        // ICMPv6 processing can be added here
+                        break;
+                    default:
+                        cout << "Unhandled IPv6 Next Header: " << next_header << endl;
+                        break;
+                }
                 break;
         }
         av.push_back(cp);

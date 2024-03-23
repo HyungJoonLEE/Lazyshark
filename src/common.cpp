@@ -3,7 +3,7 @@
 void populatePortMap() {
     portMap[20] = "FTP";
     portMap[21] = "FTP";
-    portMap[22] = "SSH";
+    portMap[22] = " SSH";
     portMap[23] = "Telnet";
     portMap[25] = "SMTP";
     portMap[53] = "DNS";
@@ -26,6 +26,8 @@ void populatePortMap() {
     portMap[389] = "LDAP";
     portMap[443] = "HTTPS";
     portMap[500] = "ISAKMP";
+    portMap[546] = "DHCPv6";
+    portMap[547] = "DHCPv6";
     portMap[636] = "LDAPS";
     portMap[989] = "TCP FTP";
     portMap[990] = "TCP FTP";

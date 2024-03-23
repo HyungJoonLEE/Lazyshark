@@ -85,3 +85,31 @@ void CustomPacket::setWarning(const string &logTime, const unordered_map<string,
     }
 }
 
+
+void CustomPacket::processARP(const struct ether_header *hdr) {
+    if (protocol_.empty()) protocol_ = "ARP";
+    sport_ = ntohs(0);
+    dport_ = ntohs(0);
+
+    char src_mac_str[18] = {0}; // 17 for MAC address in text + null terminator
+    char dst_mac_str[18] = {0};
+
+    snprintf(src_mac_str, sizeof(src_mac_str), "%02x:%02x:%02x:%02x:%02x:%02x",
+             hdr->ether_shost[0], hdr->ether_shost[1], hdr->ether_shost[2],
+             hdr->ether_shost[3], hdr->ether_shost[4], hdr->ether_shost[5]);
+
+    snprintf(dst_mac_str, sizeof(dst_mac_str), "%02x:%02x:%02x:%02x:%02x:%02x",
+             hdr->ether_dhost[0], hdr->ether_dhost[1], hdr->ether_dhost[2],
+             hdr->ether_dhost[3], hdr->ether_dhost[4], hdr->ether_dhost[5]);
+
+    source_ = string(src_mac_str);
+    dest_ = string(dst_mac_str);
+
+    if (source_ == "ff:ff:ff:ff:ff:ff") {
+        source_ = "Broadcast";
+    }
+    if (dest_ == "ff:ff:ff:ff:ff:ff") {
+        dest_ = "Broadcast";
+    }
+}
+

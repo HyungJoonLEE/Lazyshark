@@ -58,6 +58,7 @@ public:
     void processTCP(const struct tcphdr* hdr);
     void processUDP(const struct udphdr* hdr);
     void processICMP(const struct icmphdr *hdr);
+    void processARP(const struct ether_header *hdr);
 
 
     unsigned int getNo() const;

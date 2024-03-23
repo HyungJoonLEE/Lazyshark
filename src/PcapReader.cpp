@@ -36,7 +36,6 @@ void PcapReader::readPcapFile(const string &pcapFile,
     const char *payload;
     unsigned int packetCount = 0;
     unsigned int payloadLen = 0;
-    ostringstream hexStream;
 
 
     av.reserve(30000);
@@ -72,36 +71,38 @@ void PcapReader::readPcapFile(const string &pcapFile,
                         payload = (char *) (packet + SIZE_ETH + SIZE_IPV4 + SIZE_TCP);
                         payloadLen = ntohs(ipv4->ip_len) - ipv4->ip_hl * 4 - SIZE_TCP;
                         cp->processTCP(tcp_hdr);
-                        if (!cp->getWarning().empty()) {
-                            if (payloadLen > 0) {
-                                for (int i = 0; i < payloadLen; ++i) {
-                                    hexStream << hex << setw(2) << setfill('0') << static_cast<int>(payload[i]);
-                                    if (i < payloadLen - 1) {
-                                        hexStream << " "; // Optional: Add a space between bytes
-                                    }
-                                }
-                                cp->setData(hexStream.str());
-                                hexStream.clear();
-                            }
-                        }
+//                        if (!cp->getWarning().empty()) {
+//                            if (payloadLen > 0) {
+//                                string data;
+//                                for (int i = 0; i < payloadLen; ++i) {
+//                                    char hex[3]; // Two characters for the byte and one for null-termination
+//                                    sprintf(hex, "%02x", payload[i]);
+//                                    data.append(hex);
+//                                    if (i < payloadLen - 1) data += " ";
+//                                }
+//                                cp->setData(data);
+//                                data.clear();
+//                            }
+//                        }
                         break;
                     case IPPROTO_UDP:
                         udp_hdr = (struct udphdr *) (packet + SIZE_ETH + SIZE_IPV4);
                         payload = (char *) (packet + SIZE_ETH + SIZE_IPV4 + SIZE_UDP);
                         payloadLen = ntohs(ipv4->ip_len) - ipv4->ip_hl * 4 - SIZE_UDP;
                         cp->processUDP(udp_hdr);
-                        if (!cp->getWarning().empty()) {
-                            if (payloadLen > 0) {
-                                for (int i = 0; i < payloadLen; ++i) {
-                                    hexStream << hex << setw(2) << setfill('0') << static_cast<int>(payload[i]);
-                                    if (i < payloadLen - 1) {
-                                        hexStream << " "; // Optional: Add a space between bytes
-                                    }
-                                }
-                                cp->setData(hexStream.str());
-                                hexStream.clear();
-                            }
-                        }
+//                        if (!cp->getWarning().empty()) {
+//                            if (payloadLen > 0) {
+//                                string data;
+//                                for (int i = 0; i < payloadLen; ++i) {
+//                                    char hex[3]; // Two characters for the byte and one for null-termination
+//                                    sprintf(hex, "%02x", payload[i]);
+//                                    data.append(hex);
+//                                    if (i < payloadLen - 1) data += " ";
+//                                }
+//                                cp->setData(data);
+//                                data.clear();
+//                            }
+//                        }
                         break;
                     case IPPROTO_ICMP:
                         icmp_hdr = (struct icmphdr *) (packet + SIZE_ETH + SIZE_IPV4);

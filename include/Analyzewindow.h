@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <string>
 #include <set>
+#include <QTableWidgetItem>
 #include "CustomPacket.h"
 
 
@@ -34,6 +35,7 @@ private slots:
     void on_comboBox_2_currentTextChanged(const QString &arg1);
     void on_comboBox_3_currentTextChanged(const QString &arg1);
     void on_pushButton_clicked();
+    void onItemClicked(QTableWidgetItem* item);
 
 private:
     Ui::AnalyzeWindow *ui;

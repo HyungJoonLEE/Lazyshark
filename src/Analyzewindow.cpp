@@ -9,6 +9,8 @@ AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->tableWidget->verticalHeader()->setVisible(false);
     initPriorityMap();
+    ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+
 
     // set table
     ui->tableWidget->setColumnWidth(0, 90);     // NO
@@ -21,8 +23,7 @@ AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
     ui->tableWidget->setColumnWidth(7, 80);     // LENGTH
     ui->tableWidget->setColumnWidth(8, 400);    // WARNING
 //    ui->tableWidget->setColumnWidth(9, 700);    // DATA
-
-
+    connect(ui->tableWidget, &QTableWidget::itemClicked, this, &AnalyzeWindow::onItemClicked);
 }
 
 
@@ -161,6 +162,19 @@ void AnalyzeWindow::on_pushButton_clicked() {
             g++;
 
         }
+    }
+}
+
+
+void AnalyzeWindow::onItemClicked(QTableWidgetItem *item) {
+    if (item != nullptr) {
+        int row = item->row();
+        string data = _rv[row]->getData();
+        cout << data << endl;
+        QMessageBox::information(this,
+                                 "Payload",
+                                 "Value: ",
+                                 QString::fromStdString(_rv[row]->getData()));
     }
 }
 

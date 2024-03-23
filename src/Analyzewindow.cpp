@@ -128,8 +128,10 @@ void AnalyzeWindow::on_pushButton_clicked() {
         bool protocolMatch = (protocol_val == "ALL") || (QString::fromStdString(_rv[h]->getProtocol()) == protocol_val);
         bool ipMatch = (ip_val == "ALL") || (QString::fromStdString(_rv[h]->getSIP()) == ip_val || QString::fromStdString(_rv[h]->getDIP()) == ip_val);
         bool portMatch = (port_val == "ALL") || (QString::number(_rv[h]->getSPort()) == port_val || QString::number(_rv[h]->getDPort()) == port_val);
+        bool hasWarning = !_rv[h]->getWarning().empty(); // Check if there is a warning
+        bool justWarning = (ui->comboBox_4->currentText() == "ALL") || hasWarning;
 
-        if (protocolMatch && ipMatch && portMatch) {
+        if (protocolMatch && ipMatch && portMatch && justWarning) {
             ui->tableWidget->setItem(g, 0, new QTableWidgetItem(QString::number(_rv[h]->getNo())));
             ui->tableWidget->setItem(g, 1, new QTableWidgetItem(QString::fromStdString(_rv[h]->getTime())));
             ui->tableWidget->setItem(g, 2, new QTableWidgetItem(QString::fromStdString(_rv[h]->getProtocol())));

@@ -134,6 +134,27 @@ QTableWidget::item:selected { background-color: lightblue; }</string>
         <item>
          <widget class="QComboBox" name="comboBox_3"/>
         </item>
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Warnings</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_4">
+          <item>
+           <property name="text">
+            <string>ALL</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>ONLY</string>
+           </property>
+          </item>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>

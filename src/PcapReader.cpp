@@ -72,22 +72,36 @@ void PcapReader::readPcapFile(const string &pcapFile,
                         payload = (char *) (packet + SIZE_ETH + SIZE_IPV4 + SIZE_TCP);
                         payloadLen = ntohs(ipv4->ip_len) - ipv4->ip_hl * 4 - SIZE_TCP;
                         cp->processTCP(tcp_hdr);
-//                        if (payloadLen > 0) {
-//                            for (int i = 0; i < payloadLen; ++i) {
-//                                hexStream << hex << setw(2) << setfill('0') << static_cast<int>(payload[i]);
-//                                if (i < payloadLen - 1) {
-//                                    hexStream << " "; // Optional: Add a space between bytes
-//                                }
-//                            }
-//                            cp->setData(hexStream.str());
-//                            hexStream.clear();
-//                        }
+                        if (!cp->getWarning().empty()) {
+                            if (payloadLen > 0) {
+                                for (int i = 0; i < payloadLen; ++i) {
+                                    hexStream << hex << setw(2) << setfill('0') << static_cast<int>(payload[i]);
+                                    if (i < payloadLen - 1) {
+                                        hexStream << " "; // Optional: Add a space between bytes
+                                    }
+                                }
+                                cp->setData(hexStream.str());
+                                hexStream.clear();
+                            }
+                        }
                         break;
                     case IPPROTO_UDP:
                         udp_hdr = (struct udphdr *) (packet + SIZE_ETH + SIZE_IPV4);
                         payload = (char *) (packet + SIZE_ETH + SIZE_IPV4 + SIZE_UDP);
                         payloadLen = ntohs(ipv4->ip_len) - ipv4->ip_hl * 4 - SIZE_UDP;
                         cp->processUDP(udp_hdr);
+                        if (!cp->getWarning().empty()) {
+                            if (payloadLen > 0) {
+                                for (int i = 0; i < payloadLen; ++i) {
+                                    hexStream << hex << setw(2) << setfill('0') << static_cast<int>(payload[i]);
+                                    if (i < payloadLen - 1) {
+                                        hexStream << " "; // Optional: Add a space between bytes
+                                    }
+                                }
+                                cp->setData(hexStream.str());
+                                hexStream.clear();
+                            }
+                        }
                         break;
                     case IPPROTO_ICMP:
                         icmp_hdr = (struct icmphdr *) (packet + SIZE_ETH + SIZE_IPV4);
@@ -104,20 +118,22 @@ void PcapReader::readPcapFile(const string &pcapFile,
                 cp->processIP(ipv6, "ipv6");
                 int next_header = ipv6->ip6_nxt;
                 int offset = SIZE_ETH + SIZE_IPV6;
-
+                int totalPayloadLength = ntohs(ipv6->ip6_plen);
                 switch (next_header) {
                     case IPPROTO_TCP:
                         tcp_hdr = (struct tcphdr *)(packet + offset);
                         cp->processTCP(tcp_hdr);
                         // Calculate payload length if necessary
+                        payloadLen = totalPayloadLength - ((tcp_hdr->th_off << 2) + offset - SIZE_ETH);
                         break;
                     case IPPROTO_UDP:
                         udp_hdr = (struct udphdr *)(packet + offset);
                         cp->processUDP(udp_hdr);
                         // Calculate payload length if necessary
+                        payloadLen = totalPayloadLength - (SIZE_UDP + offset - SIZE_ETH);
                         break;
                     case IPPROTO_ICMPV6:
-                        // ICMPv6 processing can be added here
+                        cp->processICMPV6();
                         break;
                     default:
                         cout << "Unhandled IPv6 Next Header: " << next_header << endl;

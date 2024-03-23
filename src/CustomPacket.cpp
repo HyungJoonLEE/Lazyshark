@@ -113,3 +113,7 @@ void CustomPacket::processARP(const struct ether_header *hdr) {
     }
 }
 
+void CustomPacket::processICMPV6() {
+    if (protocol_.empty()) protocol_ = "ICMPV6";
+}
+

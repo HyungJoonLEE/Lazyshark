@@ -175,14 +175,26 @@ void AnalyzeWindow::onItemClicked(QTableWidgetItem *item) {
         if (itemInSpecificColumn != nullptr) {
             QString value = itemInSpecificColumn->text();
             bool col_exist;
-            int warningIndex = value.toInt(&col_exist) - 1;
-            if (col_exist) {
+//            int warningIndex = value.toInt(&col_exist) - 1;
+//            if (col_exist) {
 //                if (!_rv[warningIndex]->getWarning().empty()) {
-                    auto *dialog = new HexDumpDialog(QString::fromStdString(_rv[warningIndex]->getData()));
-                    dialog->setAttribute(Qt::WA_DeleteOnClose);
-                    dialog->exec();
+//                    auto *dialog = new HexDumpDialog(QString::fromStdString(_rv[warningIndex]->getData()));
+//                    dialog->setAttribute(Qt::WA_DeleteOnClose);
+//                    dialog->exec();
 //                }
-            } else {
+//            }
+//            else {
+//                qDebug() << "Failed to convert QString to int.";
+//            }
+
+            // Display packet info of every packet
+            int dataIndex = value.toInt(&col_exist) - 1;
+            if (col_exist) {
+                auto *dialog = new HexDumpDialog(QString::fromStdString(_rv[dataIndex]->getData()));
+                dialog->setAttribute(Qt::WA_DeleteOnClose);
+                dialog->exec();
+            }
+            else {
                 qDebug() << "Failed to convert QString to int.";
             }
         }

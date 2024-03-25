@@ -167,14 +167,26 @@ void AnalyzeWindow::on_pushButton_clicked() {
 
 
 void AnalyzeWindow::onItemClicked(QTableWidgetItem *item) {
+    int target = 0;
     if (item != nullptr) {
+        QString value = item->text();
         int row = item->row();
-        string data = _rv[row]->getData();
-        cout << data << endl;
-        QMessageBox::information(this,
-                                 "Payload",
-                                 "Value: ",
-                                 QString::fromStdString(_rv[row]->getData()));
+
+        QTableWidgetItem *itemInSpecificColumn = ui->tableWidget->item(row, 0);
+        if (itemInSpecificColumn != nullptr) {
+            QString value = itemInSpecificColumn->text();
+            bool col_exist;
+            int warningIndex = value.toInt(&col_exist) - 1;
+            if (col_exist) {
+                if (!_rv[warningIndex]->getWarning().empty()) {
+                    auto *dialog = new HexDumpDialog(QString::fromStdString(_rv[warningIndex]->getData()));
+                    dialog->setAttribute(Qt::WA_DeleteOnClose);
+                    dialog->exec();
+                }
+            } else {
+                qDebug() << "Failed to convert QString to int.";
+            }
+        }
     }
 }
 

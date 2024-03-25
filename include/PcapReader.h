@@ -13,6 +13,7 @@
 #include <netinet/udp.h>
 #include <netinet/ip_icmp.h>
 #include <vector>
+#include <sstream>
 #include "CustomPacket.h"
 
 
@@ -42,6 +43,7 @@ public:
                       const unordered_map<string, tuple<int, string>> &logMap);
     static string formatTime(const struct pcap_pkthdr& header);
     static string removeYear(const string &time);
+
 
     static PcapReader& getInstance() {
         static PcapReader pcapReader;

@@ -62,18 +62,19 @@ void MainWindow::on_SubmitBtn_clicked() {
                            "WARNING",
                            "No file detected");
     else {
-        AnalyzeWindow AW[fileCount];
+        vector<std::unique_ptr<AnalyzeWindow>> AW;
         populatePortMap();
         auto &PR = reinterpret_cast<PcapReader &>(PcapReader::getInstance());
         auto &SR = reinterpret_cast<SnortRunner &>(SnortRunner::getInstance());
 
         for (int i = 0; i < fileCount; i++) {
+            AW.emplace_back(make_unique<AnalyzeWindow>());
             const string pcapFile = pcapVector[i].toUtf8().constData();
-            processPcapFile(pcapFile, PR, SR, AW[i].getRv());
-            AW[i].setModal(true);
-            AW[i].showMaximized();
-            AW[i].fillTable();
-            AW[i].exec();
+            processPcapFile(pcapFile, PR, SR, AW[i]->getRv());
+            AW[i]->setModal(true);
+            AW[i]->showMaximized();
+            AW[i]->fillTable();
+            AW[i]->exec();
         }
     }
 }

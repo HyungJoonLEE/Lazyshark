@@ -13,6 +13,7 @@
 #include <set>
 #include <QTableWidgetItem>
 #include "CustomPacket.h"
+#include "HexDumpDialog.h"
 
 
 namespace Ui {

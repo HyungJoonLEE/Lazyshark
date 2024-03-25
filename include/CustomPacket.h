@@ -51,7 +51,7 @@ public:
     void setLen(unsigned int plen);
     void setWarning(const string &logTime, const unordered_map<string, tuple<int, string>> &logMap);
     void setData(const string &data);
-    void printPayload(const u_char *payload, size_t len);
+    void savePayload(const u_char *payload, size_t len);
     void print_hex_ascii_line (const u_char *payload, int len, int offset, ostringstream& out);
 
     void processIP(const void* hdr, const string &type);

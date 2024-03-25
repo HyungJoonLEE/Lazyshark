@@ -55,7 +55,6 @@ void PcapReader::readPcapFile(const string &pcapFile,
         cp->setTime(time);
         cp->setWarning(logTime, logMap);
 
-
         eth_hdr = (struct ether_header *) packet;
 
         switch (ntohs(eth_hdr->ether_type)) {
@@ -71,38 +70,12 @@ void PcapReader::readPcapFile(const string &pcapFile,
                         payload = (char *) (packet + SIZE_ETH + SIZE_IPV4 + SIZE_TCP);
                         payloadLen = ntohs(ipv4->ip_len) - ipv4->ip_hl * 4 - SIZE_TCP;
                         cp->processTCP(tcp_hdr);
-//                        if (!cp->getWarning().empty()) {
-//                            if (payloadLen > 0) {
-//                                string data;
-//                                for (int i = 0; i < payloadLen; ++i) {
-//                                    char hex[3]; // Two characters for the byte and one for null-termination
-//                                    sprintf(hex, "%02x", payload[i]);
-//                                    data.append(hex);
-//                                    if (i < payloadLen - 1) data += " ";
-//                                }
-//                                cp->setData(data);
-//                                data.clear();
-//                            }
-//                        }
                         break;
                     case IPPROTO_UDP:
                         udp_hdr = (struct udphdr *) (packet + SIZE_ETH + SIZE_IPV4);
                         payload = (char *) (packet + SIZE_ETH + SIZE_IPV4 + SIZE_UDP);
                         payloadLen = ntohs(ipv4->ip_len) - ipv4->ip_hl * 4 - SIZE_UDP;
                         cp->processUDP(udp_hdr);
-//                        if (!cp->getWarning().empty()) {
-//                            if (payloadLen > 0) {
-//                                string data;
-//                                for (int i = 0; i < payloadLen; ++i) {
-//                                    char hex[3]; // Two characters for the byte and one for null-termination
-//                                    sprintf(hex, "%02x", payload[i]);
-//                                    data.append(hex);
-//                                    if (i < payloadLen - 1) data += " ";
-//                                }
-//                                cp->setData(data);
-//                                data.clear();
-//                            }
-//                        }
                         break;
                     case IPPROTO_ICMP:
                         icmp_hdr = (struct icmphdr *) (packet + SIZE_ETH + SIZE_IPV4);
@@ -142,27 +115,14 @@ void PcapReader::readPcapFile(const string &pcapFile,
                 }
                 break;
         }
+        if (!cp->getWarning().empty()) {
+            cp->savePayload(packet, header.len);
+        }
         av.push_back(cp);
     }
+
     pcap_close(handle);
 }
-
-
-
-//                payload = (char *) (packet + sizeof(struct ether_header) + sizeof(struct ip) + sizeof(struct tcphdr));
-//                payload_size = ntohs(cp->getIpv4Hdr()->ip_len) - cp->getIpv4Hdr()->ip_hl * 4 - sizeof(struct tcphdr);
-//                if (payload_size > 0) {
-//                    printf("    Payload (%d bytes):\n", payload_size);
-//                    cp->printPayload(reinterpret_cast<const u_char *>(payload), payload_size);
-//                }
-//
-//                payload_size = cp->getIpv4Hdr()->ip_len - cp->getIpv4Hdr()->ip_hl * 4 - sizeof(struct udphdr);
-//                if (payload_size > 0) {
-//                    printf("    Payload (%d bytes):\n", payload_size);
-//                    cp->printPayload(reinterpret_cast<const u_char *>(payload), payload_size);
-//                }
-
-
 
 
 void PcapReader::close() {
@@ -196,3 +156,5 @@ string PcapReader::removeYear(const string &time) {
 
     return UTC_Time.str();
 }
+
+

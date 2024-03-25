@@ -113,7 +113,89 @@ void CustomPacket::processARP(const struct ether_header *hdr) {
     }
 }
 
+
 void CustomPacket::processICMPV6() {
     if (protocol_.empty()) protocol_ = "ICMPV6";
+}
+
+
+void CustomPacket::savePayload(const u_char *payload, size_t len) {
+    int len_rem = len;
+    int line_width = 16;		// number of bytes per line
+    int line_len;
+    int offset = 0;			// offset counter
+    const u_char *ch = payload;
+    std::ostringstream oss;
+
+
+    if (len <= 0)
+        return;
+
+    if (len <= line_width) {
+        print_hex_ascii_line (ch, len, offset, oss);
+        return;
+    }
+
+    for ( ;; ) {
+        // determine the line length and print
+        line_len = line_width % len_rem;
+        print_hex_ascii_line (ch, line_len, offset, oss);
+
+        // Process the remainder of the line
+        len_rem -= line_len;
+        ch += line_len;
+        offset += line_width;
+
+        // Ensure we have line width chars or less
+        if (len_rem <= line_width) {
+            //print last line
+            print_hex_ascii_line (ch, len_rem, offset, oss);
+            break;
+        }
+    }
+}
+
+void CustomPacket::print_hex_ascii_line(const u_char *payload, int len, int offset, ostringstream &oss) {
+    int i;
+    int gap;
+    const u_char *ch;
+
+    // Append the offset in hexadecimal
+    oss << std::setw(5) << std::setfill('0') << std::hex << offset << "   ";
+
+    // Append the hex values
+    ch = payload;
+    for (i = 0; i < len; i++) {
+        oss << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(*ch) << " ";
+        ch++;
+        // Append extra space after 8th byte for visual aid
+        if (i == 7)
+            oss << " ";
+    }
+    // Append space to handle line less than 8 bytes
+    if (len < 8)
+        oss << " ";
+
+    // Fill line with whitespace if not the full width
+    if (len < 16) {
+        gap = 16 - len;
+        for (i = 0; i < gap; i++) {
+            oss << "   ";
+        }
+    }
+    oss << "   ";
+
+    // Append the ASCII values
+    ch = payload;
+    for (i = 0; i < len; i++) {
+        if (isprint(*ch))
+            oss << *ch;
+        else
+            oss << ".";
+        ch++;
+    }
+
+    oss << "\n";
+    data_ = oss.str();
 }
 

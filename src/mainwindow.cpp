@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "Analyzewindow.h"
+#include "LiveCapture.h"
+#include "PacketCapturer.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -77,5 +79,17 @@ void MainWindow::on_SubmitBtn_clicked() {
             AW[i]->exec();
         }
     }
+}
+
+
+void MainWindow::on_RunBtn_clicked() {
+    cout << "hello" << endl;
+    auto *pc = new PacketCapturer();
+    QThread *thread = new QThread();
+
+    pc->moveToThread(thread);
+    connect(thread, &QThread::started, pc, &PacketCapturer::startCapture);
+
+    thread->start();
 }
 

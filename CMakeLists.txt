@@ -43,6 +43,7 @@ file(GLOB_RECURSE SOURCES
         "${SOURCE_DIR}/*.cpp"
 )
 
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 #find_package(QT${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt6Core REQUIRED)

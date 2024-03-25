@@ -15,6 +15,7 @@
 #include <QButtonGroup>
 #include <QPen>
 #include <QPainter>
+#include <QThread>
 #include <cstdlib>
 #include "PcapReader.h"
 #include "SnortRunner.h"
@@ -41,6 +42,8 @@ public:
 
 private slots:
     void on_SubmitBtn_clicked();
+
+    void on_RunBtn_clicked();
 
 private:
     Ui::MainWindow *ui;

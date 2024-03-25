@@ -17,7 +17,7 @@
 
 
 namespace Ui {
-class AnalyzeWindow;
+    class AnalyzeWindow;
 }
 
 class AnalyzeWindow : public QDialog

@@ -6,13 +6,12 @@
 AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
     QDialog(parent), ui(new Ui::AnalyzeWindow) {
 
+    initPriorityMap();
+
     ui->setupUi(this);
     ui->tableWidget->verticalHeader()->setVisible(false);
-    initPriorityMap();
     ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-
-    // set table
     ui->tableWidget->setColumnWidth(0, 90);     // NO
     ui->tableWidget->setColumnWidth(1, 250);    // TIME
     ui->tableWidget->setColumnWidth(2, 100);     // PROTOCOL
@@ -22,7 +21,7 @@ AnalyzeWindow::AnalyzeWindow(QWidget *parent) :
     ui->tableWidget->setColumnWidth(6, 200);    // DESTINATION
     ui->tableWidget->setColumnWidth(7, 80);     // LENGTH
     ui->tableWidget->setColumnWidth(8, 400);    // WARNING
-//    ui->tableWidget->setColumnWidth(9, 700);    // DATA
+
     connect(ui->tableWidget, &QTableWidget::itemClicked, this, &AnalyzeWindow::onItemClicked);
 }
 
@@ -45,7 +44,7 @@ void AnalyzeWindow::fillTable() {
         ui->tableWidget->setItem(i, 5, new QTableWidgetItem(QString::number(_rv[i]->getDPort())));
         ui->tableWidget->setItem(i, 7, new QTableWidgetItem(QString::number(_rv[i]->getLen())));
         ui->tableWidget->setItem(i, 8, new QTableWidgetItem(QString::fromStdString(_rv[i]->getWarning())));
-//        ui->tableWidget->setItem(i, 9, new QTableWidgetItem(QString::fromStdString(_rv[i]->getData())));
+
         ui->tableWidget->item(i, 0)->setTextAlignment(Qt::AlignCenter);
         ui->tableWidget->item(i, 1)->setTextAlignment(Qt::AlignCenter);
         ui->tableWidget->item(i, 2)->setTextAlignment(Qt::AlignCenter);
@@ -55,7 +54,6 @@ void AnalyzeWindow::fillTable() {
         ui->tableWidget->item(i, 6)->setTextAlignment(Qt::AlignCenter);
         ui->tableWidget->item(i, 7)->setTextAlignment(Qt::AlignCenter);
         ui->tableWidget->item(i, 8)->setTextAlignment(Qt::AlignCenter);
-//        ui->tableWidget->item(i, 9)->setTextAlignment(Qt::AlignCenter);
 
         // color warnings
         if (!_rv[i]->getWarning().empty()) {
@@ -83,6 +81,7 @@ void AnalyzeWindow::fillTable() {
         ui->comboBox_2->addItem(QString::fromStdString(item));
     }
 
+    // Port filter
     ui->comboBox_3->addItem(QString::fromStdString("ALL"));
     for (const auto &item : ports) {
         ui->comboBox_3->addItem(QString::fromStdString(item));
@@ -98,7 +97,7 @@ void AnalyzeWindow::initPriorityMap() {
     priorityMap_[1] = "#FF0000";    // red
     priorityMap_[2] = "#FFD700";    // yellow
     priorityMap_[3] = "#ADFF2F";    // green-yellow
-    priorityMap_[4] = "#98FB98";    // light-green
+    priorityMap_[4] = "#2FE3FF";    // light-green
 }
 
 
@@ -178,11 +177,11 @@ void AnalyzeWindow::onItemClicked(QTableWidgetItem *item) {
             bool col_exist;
             int warningIndex = value.toInt(&col_exist) - 1;
             if (col_exist) {
-                if (!_rv[warningIndex]->getWarning().empty()) {
+//                if (!_rv[warningIndex]->getWarning().empty()) {
                     auto *dialog = new HexDumpDialog(QString::fromStdString(_rv[warningIndex]->getData()));
                     dialog->setAttribute(Qt::WA_DeleteOnClose);
                     dialog->exec();
-                }
+//                }
             } else {
                 qDebug() << "Failed to convert QString to int.";
             }

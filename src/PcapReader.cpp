@@ -115,9 +115,9 @@ void PcapReader::readPcapFile(const string &pcapFile,
                 }
                 break;
         }
-        if (!cp->getWarning().empty()) {
+//        if (!cp->getWarning().empty()) {
             cp->savePayload(packet, header.len);
-        }
+//        }
         av.push_back(cp);
     }
 

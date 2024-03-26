@@ -2,11 +2,18 @@
 #include <QDebug>
 #include <iostream>
 
+struct PacketHandlerUserData {
+    vector<CustomPacket*>* cv;
+    PacketCapturer* capturer;
+};
+
 PacketCapturer::PacketCapturer(QObject *parent) : QObject(parent) {
 }
 
 void PacketCapturer::startCapture(vector<CustomPacket*>& cv) {
     // Setup and start packet capturing here (e.g., pcap_loop)
+    PacketHandlerUserData* userData = new PacketHandlerUserData{&cv, this};
+
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_if_t *interfaces, *temp;
     int i = 0;
@@ -26,15 +33,12 @@ void PacketCapturer::startCapture(vector<CustomPacket*>& cv) {
             qDebug() << "Could not open device: " << errbuf;
         } else {
             // Start packet capturing loop
-            pcap_loop(handle, 0, packetHandler, reinterpret_cast<u_char*>(&cv));
+            pcap_loop(handle, 0, packetHandler, reinterpret_cast<u_char*>(userData));
             pcap_close(handle);
         }
     }
 
     pcap_freealldevs(interfaces);
-
-//    // For each captured packet, emit newPacket signal
-//    emit newPacket("Captured packet info");
 }
 
 
@@ -50,7 +54,11 @@ void packetHandler(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char*
     unsigned int packetCount = 0;
     unsigned int payloadLen = 0;
 
-    auto* cv = reinterpret_cast<vector<CustomPacket*>*>(args);
+    auto* userData = reinterpret_cast<PacketHandlerUserData*>(args);
+    auto* cv = userData->cv;
+    auto* capturer = userData->capturer;
+
+//    auto* cv = reinterpret_cast<vector<CustomPacket*>*>(args);
     char errbuf[PCAP_ERRBUF_SIZE];
 
     eth_hdr = (struct ether_header*)packet;
@@ -129,6 +137,7 @@ void packetHandler(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char*
     }
     cp->savePayload(packet, header.len);
     cv->push_back(cp);
+    capturer->notifyPacketCaptured();
 }
 
 
@@ -154,4 +163,9 @@ string removeYear(const string &time) {
     UTC_Time << month << "/" << day << rest; // "MM/DD-HH:MM:SS.ffffff"
 
     return UTC_Time.str();
+}
+
+
+void PacketCapturer::notifyPacketCaptured() {
+    emit cvUpdated();
 }

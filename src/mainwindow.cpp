@@ -84,7 +84,7 @@ void MainWindow::on_SubmitBtn_clicked() {
 
 void MainWindow::on_RunBtn_clicked() {
     auto *pc = new PacketCapturer();
-    auto *lc = new LiveCapture();
+    auto *lc = new LiveCapture(pc);
     lc->setModal(true);
     lc->showMaximized();
 

@@ -20,16 +20,18 @@ using namespace std;
 
 class PacketCapturer : public QObject {
 Q_OBJECT
+
 public:
     explicit PacketCapturer(QObject *parent = nullptr);
-    void startCapture(vector<CustomPacket*>& cv); // Function to start capturing packets
+    void startCapture(vector<CustomPacket *> &cv); // Function to start capturing packets
+    void notifyPacketCaptured();
 
 signals:
-    void newPacket(QString info); // Signal to emit when a new packet is captured
+    void cvUpdated(); // Signal to emit when a new packet is captured
 };
 
-void packetHandler(u_char *userData, const struct pcap_pkthdr *packetHeader, const u_char *packetData);
 string formatTime(const pcap_pkthdr* &header);
+void packetHandler(u_char *userData, const struct pcap_pkthdr *packetHeader, const u_char *packetData);
 string removeYear(const string &time);
 
 

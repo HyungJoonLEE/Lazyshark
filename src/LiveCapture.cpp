@@ -2,10 +2,8 @@
 #include "ui_LiveCapture.h"
 
 
-LiveCapture::LiveCapture(QWidget *parent) :
-    QDialog(parent), ui(new Ui::LiveCapture) {
-
-    initPriorityMap();
+LiveCapture::LiveCapture(PacketCapturer* pc, QWidget *parent) :
+    QDialog(parent), ui(new Ui::LiveCapture), pc(pc) {
 
     ui->setupUi(this);
     ui->tableWidget->verticalHeader()->setVisible(false);
@@ -22,6 +20,9 @@ LiveCapture::LiveCapture(QWidget *parent) :
     ui->tableWidget->setColumnWidth(8, 400);    // WARNING
 
     connect(ui->tableWidget, &QTableWidget::itemClicked, this, &LiveCapture::onItemClicked);
+    if (pc) {
+        connect(pc, &PacketCapturer::cvUpdated, this, &LiveCapture::refreshTable);
+    }
 }
 
 
@@ -30,14 +31,54 @@ LiveCapture::~LiveCapture() {
 }
 
 
+void LiveCapture::refreshTable() {
+    ui->tableWidget->clearContents();
+    ui->tableWidget->setRowCount(cv.size());
+
+    for (int i = 0; i < cv.size(); ++i) {
+        const CustomPacket* packet = cv.at(i);
+
+        // Assuming CustomPacket class has methods to get necessary info
+        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(packet->getNo())));
+        ui->tableWidget->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(packet->getTime())));
+        ui->tableWidget->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(packet->getProtocol())));
+        ui->tableWidget->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(packet->getSIP())));
+        ui->tableWidget->setItem(i, 4, new QTableWidgetItem(QString::number(packet->getSPort())));
+        ui->tableWidget->setItem(i, 5, new QTableWidgetItem(QString::number(packet->getDPort())));
+        ui->tableWidget->setItem(i, 6, new QTableWidgetItem(QString::fromStdString(packet->getDIP())));
+        ui->tableWidget->setItem(i, 7, new QTableWidgetItem(QString::number(packet->getLen())));
+
+        ui->tableWidget->item(i, 0)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 1)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 2)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 3)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 4)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 5)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 6)->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->item(i, 7)->setTextAlignment(Qt::AlignCenter);
+    }
+}
+
 void LiveCapture::onItemClicked(QTableWidgetItem *item) {
+    int target = 0;
+    if (item != nullptr) {
+        QString value = item->text();
+        int row = item->row();
 
+        QTableWidgetItem *itemInSpecificColumn = ui->tableWidget->item(row, 0);
+        if (itemInSpecificColumn != nullptr) {
+            QString value = itemInSpecificColumn->text();
+            bool col_exist;
+            int dataIndex = value.toInt(&col_exist) - 1;
+            if (col_exist) {
+                auto *dialog = new HexDumpDialog(QString::fromStdString(cv[dataIndex]->getData()));
+                dialog->setAttribute(Qt::WA_DeleteOnClose);
+                dialog->exec();
+            }
+            else {
+                qDebug() << "Failed to convert QString to int.";
+            }
+        }
+    }
 }
 
-
-void LiveCapture::initPriorityMap() {
-    priorityMap_[1] = "#FF0000";    // red
-    priorityMap_[2] = "#FFD700";    // yellow
-    priorityMap_[3] = "#ADFF2F";    // green-yellow
-    priorityMap_[4] = "#2FE3FF";    // light-green
-}

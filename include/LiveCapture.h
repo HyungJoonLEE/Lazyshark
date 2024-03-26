@@ -14,6 +14,7 @@
 #include <QTableWidgetItem>
 #include "CustomPacket.h"
 #include "HexDumpDialog.h"
+#include "PacketCapturer.h"
 
 
 namespace Ui {
@@ -25,17 +26,17 @@ class LiveCapture : public QDialog
     Q_OBJECT
 
 public:
-    explicit LiveCapture(QWidget *parent = nullptr);
+    explicit LiveCapture(PacketCapturer* pc, QWidget *parent = nullptr);
     ~LiveCapture();
 
-    void initPriorityMap();
     vector<CustomPacket*>& get_cv() { return cv; }
+    void refreshTable();
 
 private slots:
     void onItemClicked(QTableWidgetItem* item);
 
-
 private:
+    PacketCapturer pc;
     Ui::LiveCapture *ui;
     unordered_map<int, string> priorityMap_;
     vector<CustomPacket*> cv;

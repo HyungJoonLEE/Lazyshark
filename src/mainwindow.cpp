@@ -83,13 +83,23 @@ void MainWindow::on_SubmitBtn_clicked() {
 
 
 void MainWindow::on_RunBtn_clicked() {
-    cout << "hello" << endl;
     auto *pc = new PacketCapturer();
-    QThread *thread = new QThread();
+    auto *lc = new LiveCapture();
+    lc->setModal(true);
+    lc->showMaximized();
 
-    pc->moveToThread(thread);
-    connect(thread, &QThread::started, pc, &PacketCapturer::startCapture);
+    auto *pc_thread = new QThread();
+    auto *lc_thread = new QThread();
 
-    thread->start();
+    pc->moveToThread(pc_thread);
+    pc->moveToThread(lc_thread);
+
+    connect(lc_thread, &QThread::started, lc, &LiveCapture::exec);
+    connect(pc_thread, &QThread::started, pc, [pc, lc]() {
+        pc->startCapture(lc->get_cv());
+    });
+
+    pc_thread->start();
+    lc_thread->start();
 }
 

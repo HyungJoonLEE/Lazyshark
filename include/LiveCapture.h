@@ -29,6 +29,7 @@ public:
     ~LiveCapture();
 
     void initPriorityMap();
+    vector<CustomPacket*>& get_cv() { return cv; }
 
 private slots:
     void onItemClicked(QTableWidgetItem* item);
@@ -37,6 +38,7 @@ private slots:
 private:
     Ui::LiveCapture *ui;
     unordered_map<int, string> priorityMap_;
+    vector<CustomPacket*> cv;
 
 };
 #endif //LIVECAPTURE_H

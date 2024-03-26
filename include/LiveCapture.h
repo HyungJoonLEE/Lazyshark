@@ -40,6 +40,7 @@ private:
     Ui::LiveCapture *ui;
     unordered_map<int, string> priorityMap_;
     vector<CustomPacket*> cv;
+    unsigned long priv = 0;
 
 };
 #endif //LIVECAPTURE_H

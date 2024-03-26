@@ -32,14 +32,13 @@ LiveCapture::~LiveCapture() {
 
 
 void LiveCapture::refreshTable() {
-    ui->tableWidget->clearContents();
     ui->tableWidget->setRowCount(cv.size());
 
-    for (int i = 0; i < cv.size(); ++i) {
-        const CustomPacket* packet = cv.at(i);
+    for (int i = priv; i < cv.size(); ++i) {
+        const CustomPacket *packet = cv.at(i);
 
         // Assuming CustomPacket class has methods to get necessary info
-        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(packet->getNo())));
+        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(i + 1)));
         ui->tableWidget->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(packet->getTime())));
         ui->tableWidget->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(packet->getProtocol())));
         ui->tableWidget->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(packet->getSIP())));
@@ -48,14 +47,13 @@ void LiveCapture::refreshTable() {
         ui->tableWidget->setItem(i, 6, new QTableWidgetItem(QString::fromStdString(packet->getDIP())));
         ui->tableWidget->setItem(i, 7, new QTableWidgetItem(QString::number(packet->getLen())));
 
-        ui->tableWidget->item(i, 0)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(i, 1)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(i, 2)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(i, 3)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(i, 4)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(i, 5)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(i, 6)->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->item(i, 7)->setTextAlignment(Qt::AlignCenter);
+        // Set alignment for each cell in the row
+        for (int col = 0; col < 8; ++col) {
+            if (ui->tableWidget->item(i, col)) {
+                ui->tableWidget->item(i, col)->setTextAlignment(Qt::AlignCenter);
+            }
+        }
+        priv = cv.size();
     }
 }
 

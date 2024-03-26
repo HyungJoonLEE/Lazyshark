@@ -10,9 +10,9 @@ struct PacketHandlerUserData {
 PacketCapturer::PacketCapturer(QObject *parent) : QObject(parent) {
 }
 
-void PacketCapturer::startCapture(vector<CustomPacket*>& cv) {
+void PacketCapturer::startCapture(vector<CustomPacket*> &cv) {
     // Setup and start packet capturing here (e.g., pcap_loop)
-    PacketHandlerUserData* userData = new PacketHandlerUserData{&cv, this};
+    auto* userData = new PacketHandlerUserData{&cv, this};
 
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_if_t *interfaces, *temp;
@@ -50,16 +50,11 @@ void packetHandler(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char*
     struct tcphdr *tcp_hdr;
     struct udphdr *udp_hdr;
     struct icmphdr *icmp_hdr;
-    const char *payload;
     unsigned int packetCount = 0;
-    unsigned int payloadLen = 0;
 
     auto* userData = reinterpret_cast<PacketHandlerUserData*>(args);
     auto* cv = userData->cv;
     auto* capturer = userData->capturer;
-
-//    auto* cv = reinterpret_cast<vector<CustomPacket*>*>(args);
-    char errbuf[PCAP_ERRBUF_SIZE];
 
     eth_hdr = (struct ether_header*)packet;
     
@@ -74,7 +69,7 @@ void packetHandler(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char*
     cp->setLen(pkthdr->len);
     cp->setTime(time);
 //    cp->setWarning(logTime, logMap);
-    cout << cp->getTime() << endl;
+//    cout << cp->getTime() << endl;
 
 
     switch (ntohs(eth_hdr->ether_type)) {
@@ -87,14 +82,10 @@ void packetHandler(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char*
             switch (ipv4->ip_p) {
                 case IPPROTO_TCP:
                     tcp_hdr = (struct tcphdr *) (packet + SIZE_ETH + SIZE_IPV4);
-                    payload = (char *) (packet + SIZE_ETH + SIZE_IPV4 + SIZE_TCP);
-                    payloadLen = ntohs(ipv4->ip_len) - ipv4->ip_hl * 4 - SIZE_TCP;
                     cp->processTCP(tcp_hdr);
                     break;
                 case IPPROTO_UDP:
                     udp_hdr = (struct udphdr *) (packet + SIZE_ETH + SIZE_IPV4);
-                    payload = (char *) (packet + SIZE_ETH + SIZE_IPV4 + SIZE_UDP);
-                    payloadLen = ntohs(ipv4->ip_len) - ipv4->ip_hl * 4 - SIZE_UDP;
                     cp->processUDP(udp_hdr);
                     break;
                 case IPPROTO_ICMP:
@@ -112,19 +103,14 @@ void packetHandler(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char*
             cp->processIP(ipv6, "ipv6");
             int next_header = ipv6->ip6_nxt;
             int offset = SIZE_ETH + SIZE_IPV6;
-            int totalPayloadLength = ntohs(ipv6->ip6_plen);
             switch (next_header) {
                 case IPPROTO_TCP:
                     tcp_hdr = (struct tcphdr *)(packet + offset);
                     cp->processTCP(tcp_hdr);
-                    // Calculate payload length if necessary
-                    payloadLen = totalPayloadLength - ((tcp_hdr->th_off << 2) + offset - SIZE_ETH);
                     break;
                 case IPPROTO_UDP:
                     udp_hdr = (struct udphdr *)(packet + offset);
                     cp->processUDP(udp_hdr);
-                    // Calculate payload length if necessary
-                    payloadLen = totalPayloadLength - (SIZE_UDP + offset - SIZE_ETH);
                     break;
                 case IPPROTO_ICMPV6:
                     cp->processICMPV6();
@@ -135,7 +121,7 @@ void packetHandler(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char*
             }
             break;
     }
-    cp->savePayload(packet, header.len);
+    cp->savePayload(packet, pkthdr->len);
     cv->push_back(cp);
     capturer->notifyPacketCaptured();
 }

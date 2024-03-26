@@ -89,17 +89,18 @@ void MainWindow::on_RunBtn_clicked() {
     lc->showMaximized();
 
     auto *pc_thread = new QThread();
-    auto *lc_thread = new QThread();
+//    auto *lc_thread = new QThread();
 
     pc->moveToThread(pc_thread);
-    pc->moveToThread(lc_thread);
+//    pc->moveToThread(lc_thread);
 
-    connect(lc_thread, &QThread::started, lc, &LiveCapture::exec);
+//    connect(lc_thread, &QThread::started, lc, &LiveCapture::exec);
     connect(pc_thread, &QThread::started, pc, [pc, lc]() {
         pc->startCapture(lc->get_cv());
     });
 
     pc_thread->start();
-    lc_thread->start();
+//    lc_thread->start();
+    lc->exec();
 }
 

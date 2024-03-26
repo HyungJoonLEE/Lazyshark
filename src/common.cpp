@@ -31,4 +31,6 @@ void populatePortMap() {
     portMap[636] = "LDAPS";
     portMap[989] = "TCP FTP";
     portMap[990] = "TCP FTP";
+    portMap[1900] = "SSDP";
+
 }

@@ -33,7 +33,7 @@ LiveCapture::~LiveCapture() {
 
 void LiveCapture::refreshTable() {
     ui->tableWidget->setRowCount(cv.size());
-
+    int temp = cv.size();
     for (int i = priv; i < cv.size(); ++i) {
         const CustomPacket *packet = cv.at(i);
 
@@ -53,8 +53,8 @@ void LiveCapture::refreshTable() {
                 ui->tableWidget->item(i, col)->setTextAlignment(Qt::AlignCenter);
             }
         }
-        priv = cv.size();
     }
+    priv = temp;
 }
 
 void LiveCapture::onItemClicked(QTableWidgetItem *item) {

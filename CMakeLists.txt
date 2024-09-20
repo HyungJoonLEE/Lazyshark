@@ -14,7 +14,13 @@ set(CMAKE_PREFIX_PATH $ENV{QTDIR})
 set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-list(APPEND CMAKE_PREFIX_PATH "/opt/Qt/6.5.3/gcc_64")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PCAP REQUIRED libpcap)
+
+
+list(APPEND CMAKE_PREFIX_PATH "/home/hj/Qt/6.5.3/gcc_64")
 
 #if(APPLE)
 #else()
@@ -35,6 +41,7 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
 include_directories(${FORMS_DIR})
 include_directories(${INCLUDE_DIR})
 include_directories(${SOURCE_DIR})
+include_directories(${PCAP_INCLUDE_DIRS})
 
 file(GLOB_RECURSE SOURCES
         "${FORMS_DIR}/*.ui"
@@ -46,8 +53,10 @@ file(GLOB_RECURSE SOURCES
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 #find_package(QT${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
-find_package(Qt6Core REQUIRED)
-find_package(Qt6Widgets REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(Pcap REQUIRED)
+
+link_directories(${PCAP_LIBRARY_DIRS})
 
 
 
@@ -86,4 +95,5 @@ install(TARGETS ${PROJECT_NAME}
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${FORMS_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${PCAP_LIBRARY})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PCAP_LIBRARIES})
+

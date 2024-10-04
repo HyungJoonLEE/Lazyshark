@@ -38,4 +38,4 @@ For a more detailed explanation of the project, including its background, design
    cd cmake-build-debug
    sudo ./Lazyshark
 
-For more detailed installation steps, including additional dependencies and troubleshooting, please refer to report.pdf.
+For more detailed installation steps, including additional dependencies and troubleshooting, please refer to **report.pdf**.
